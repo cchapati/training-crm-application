@@ -1,0 +1,14 @@
+orocrm_partner_bundle:
+    resource:     "@OroCRMPartnerBundle/Controller"
+    type:         annotation
+    prefix:       /partner
+
+
+orocrm_partner_api_partner:
+    resource:     "@OroCRMPartnerBundle/Controller/Api/Rest/PartnerController.php"
+    type:         rest
+    prefix:       api/rest/{version}/
+    requirements:
+        version:  latest|v1
+    defaults:
+        version:  latest

@@ -1,0 +1,2 @@
+classes:
+  - OroCRM\Bundle\PartnerBundle\Controller\Api\Soap\PartnerController

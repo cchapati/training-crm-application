@@ -1,0 +1,13 @@
+{% import 'OroUIBundle::macros.html.twig' as UI %}
+{% import 'OroEntityConfigBundle::macros.html.twig' as entityConfig %}
+
+<div class="widget-content">
+    <div class="row-fluid form-horizontal">
+        <div class="responsive-block">
+            {{ UI.renderProperty('orocrm.partner.start_date.label'|trans, partner.startDate|oro_format_date) }}
+            {{ UI.renderProperty('orocrm.partner.partner_condition.label'|trans, partner.partnerCondition) }}
+            {{ UI.renderProperty('orocrm.partner.status.label'|trans, partner.status.status) }}
+            {{ UI.renderHTMLProperty('orocrm.partner.contract.label'|trans, oro_file_view(partner, 'contract', partner.contract)) }}
+        </div>
+    </div>
+</div>

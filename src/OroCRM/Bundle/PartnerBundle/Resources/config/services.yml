@@ -1,0 +1,62 @@
+parameters:
+    orocrm_partner.partner.entity.class:            OroCRM\Bundle\PartnerBundle\Entity\Partner
+    orocrm_partner.type.partner.class:              OroCRM\Bundle\PartnerBundle\Form\Type\PartnerType
+    orocrm_partner.handler.partner.class:           OroCRM\Bundle\PartnerBundle\Form\Handler\PartnerHandler
+
+    orocrm_partner.partner.manager.api.class:       Oro\Bundle\SoapBundle\Entity\Manager\ApiEntityManager
+    orocrm_partner.type.partner.api.class:          OroCRM\Bundle\PartnerBundle\Form\Type\PartnerApiType
+
+    orocrm_partner.activity_widget_provider.class:  %oro_activity.widget_provider.activities.menu.class%
+
+services:
+    orocrm_partner.form.partner:
+        class:                                      Symfony\Component\Form\Form
+        factory_method: createNamed
+        factory_service: form.factory
+        arguments: ["orocrm_partner_form", "orocrm_partner", null]
+
+    orocrm_partner.form.type.partner:
+        class:                                      %orocrm_partner.type.partner.class%
+        arguments:
+            - @router
+            - @oro_locale.formatter.name
+            - @oro_security.security_facade
+        tags:
+            - { name: form.type, alias: orocrm_partner }
+
+    orocrm_partner.form.handler.partner:
+        class:                                      %orocrm_partner.handler.partner.class%
+        scope: request
+        arguments:
+            - @orocrm_partner.form.partner
+            - @request
+            - @doctrine.orm.entity_manager
+
+    orocrm_partner.partner.manager.api:
+        class:                                      %orocrm_partner.partner.manager.api.class%
+        arguments:
+            - %orocrm_partner.partner.entity.class%
+            - @doctrine.orm.entity_manager
+
+    orocrm_partner.form.type.partner.api:
+        class:                                      %orocrm_partner.type.partner.api.class%
+        arguments:
+            - @router
+            - @oro_locale.formatter.name
+            - @oro_security.security_facade
+        tags:
+            - { name: form.type, alias: partner }
+
+    orocrm_partner.form.partner.api:
+        class:                                      Symfony\Component\Form\Form
+        factory_method: createNamed
+        factory_service: form.factory
+        arguments: ["partner", "partner", null]
+
+    orocrm_partner.form.handler.partner.api:
+        class:                                      %orocrm_partner.handler.partner.class%
+        scope: request
+        arguments:
+            - @orocrm_partner.form.partner.api
+            - @request
+            - @doctrine.orm.entity_manager

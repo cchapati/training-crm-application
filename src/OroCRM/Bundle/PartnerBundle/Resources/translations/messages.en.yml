@@ -1,0 +1,26 @@
+orocrm:
+    partner:
+        entity_plural_label:        Partners
+        entity_label:               Partner
+        partner_condition.label:    Condition
+        account.label:              Partner Account
+        contract.label:             Contract File
+        owner.label:                Owner
+        start_date.label:           Partnership start date
+        status.label:               Status
+        partner_actions:            Partner actions
+        sections:
+            general:                General
+            account:                Account Information
+            additional:             Additional Information
+        datagrid.delete:            Delete
+
+        account:
+            created_at.label:       Account Created
+            updated_at.label:       Account Updated
+
+        widgets:
+            partner_information:    Partner Information
+
+        controller:
+            partner.saved.message:  Partner saved
