@@ -1,0 +1,39 @@
+OroCRM\Bundle\PartnerBundle\Entity\Partner:
+    alias: orocrm_partner
+    label: orocrm.partner.entity_plural_label
+    route:
+        name: orocrm_partner_view
+        parameters:
+            id: id
+    title_fields: [account]
+    search_template: OroCRMPartnerBundle:Partner:searchResult.html.twig
+    fields:
+        -
+            name:                   partnerCondition
+            target_type:            text
+            target_fields:          [partnerCondition]
+        -
+            name: account
+            relation_type: many-to-one
+            relation_fields:
+                -
+                    name: name
+                    target_type: text
+                    target_fields: [name]
+        -
+            name: owner
+            relation_type: many-to-one
+            relation_fields:
+                -
+                    name: username
+                    target_type: text
+                    target_fields: [username]
+
+        -
+            name: status
+            relation_type: many-to-one
+            relation_fields:
+                -
+                    name: status
+                    target_type: text
+                    target_fields: [status]

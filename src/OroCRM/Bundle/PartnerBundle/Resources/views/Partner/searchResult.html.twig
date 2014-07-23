@@ -1,0 +1,17 @@
+{#
+    Available variables:
+    * entity       - user entity OroCRM\Bundle\PartnerBundle\Entity\Partner or null
+    * indexer_item - indexer item Oro\Bundle\SearchBundle\Query\Result\Item
+#}
+{% extends 'OroSearchBundle:Search:searchResultItem.html.twig' %}
+
+{% set recordUrl = indexer_item.recordUrl %}
+{% set title = indexer_item.recordTitle %}
+
+{% set entityType = 'orocrm.partner.entity_label'|trans %}
+
+{% set entityInfo = [
+    {'title': 'orocrm.partner.start_date.label'|trans, 'value': entity.startDate|oro_format_datetime},
+    {'title': 'orocrm.partner.account.label'|trans, 'value': entity.account.name},
+    {'title': 'orocrm.partner.status.label'|trans, 'value': entity.status.status},
+] %}
