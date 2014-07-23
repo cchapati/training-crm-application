@@ -22,30 +22,31 @@ class LoadPartnerStatusData extends AbstractTranslatableEntityFixture
     /**
      * Load statuses with translation to DB
      *
-     * @param ObjectManager $manager
+     * @param ObjectManager $objectManager
      */
-    protected function loadEntities(ObjectManager $manager)
+    protected function loadEntities(ObjectManager $objectManager)
     {
-        $statusRepository = $manager->getRepository('OroCRMPartnerBundle:PartnerStatus');
+        $statusRepository = $objectManager->getRepository('OroCRMPartnerBundle:PartnerStatus');
 
         $translationLocales = $this->getTranslationLocales();
 
         foreach ($translationLocales as $locale) {
             foreach ($this->statusNames as $order => $statusName) {
                 /** @var PartnerStatus $partnerStatus */
-                $partnerStatus = $statusRepository->findOneBy(['status' => $statusName]);
+                $partnerStatus = $statusRepository->findOneBy(['name' => $statusName]);
                 if (!$partnerStatus) {
                     $partnerStatus = new PartnerStatus($statusName);
                     $partnerStatus->setOrder($order);
                 }
 
                 $statusTranslated = $this->translate($statusName, static::PARTNER_STATUS_PREFIX, $locale);
-                $partnerStatus->setStatus($statusTranslated)->setTranslatableLocale($locale);
+                $partnerStatus->setLocale($locale)
+                    ->setLabel($statusTranslated);
 
-                $manager->persist($partnerStatus);
+                $objectManager->persist($partnerStatus);
             }
 
-            $manager->flush();
+            $objectManager->flush();
         }
     }
 }

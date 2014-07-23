@@ -2,6 +2,8 @@
 
 namespace OroCRM\Bundle\PartnerBundle\Controller\Api\Rest;
 
+use OroCRM\Bundle\PartnerBundle\Entity\Partner;
+use OroCRM\Bundle\PartnerBundle\Entity\PartnerStatus;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\FormInterface;
 
@@ -21,7 +23,7 @@ use Oro\Bundle\SoapBundle\Controller\Api\Rest\RestController;
 
 /**
  * @RouteResource("partner")
- * @NamePrefix("oro_api_")
+ * @NamePrefix("orocrm_partner_api_")
  */
 class PartnerController extends RestController implements ClassResourceInterface
 {
@@ -127,9 +129,7 @@ class PartnerController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * Get entity Manager
-     *
-     * @return ApiEntityManager
+     * {@inheritdoc}
      */
     public function getManager()
     {
@@ -137,7 +137,7 @@ class PartnerController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * @return FormInterface
+     * {@inheritdoc}
      */
     public function getForm()
     {
@@ -145,10 +145,58 @@ class PartnerController extends RestController implements ClassResourceInterface
     }
 
     /**
-     * @return ApiFormHandler
+     * {@inheritdoc}
      */
     public function getFormHandler()
     {
         return $this->get('orocrm_partner.form.handler.partner.api');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getPreparedItem($entity, $resultFields = [])
+    {
+        $result = parent::getPreparedItem($entity, $resultFields);
+        unset($result['contract']);
+        return $result;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function transformEntityField($field, &$value)
+    {
+        switch ($field) {
+            case 'status':
+                if ($value) {
+                    /** @var PartnerStatus $value */
+                    $value = $value->getName();
+                }
+                break;
+            case 'owner':
+            case 'account':
+                if ($value) {
+                    $value = $value->getId();
+                }
+                break;
+            default:
+                parent::transformEntityField($field, $value);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function fixFormData(array &$data, $entity)
+    {
+        /** @var Partner $entity */
+        parent::fixFormData($data, $entity);
+
+        unset($data['id']);
+        unset($data['createdAt']);
+        unset($data['updatedAt']);
+
+        return true;
     }
 }

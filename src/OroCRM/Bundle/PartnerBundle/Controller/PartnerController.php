@@ -105,7 +105,7 @@ class PartnerController extends Controller
                     'parameters' => array('id' => $entity->getId())
                 ];
             },
-            $this->get('translator')->trans('orocrm.partner.controller.partner.saved.message'),
+            $this->get('translator')->trans('orocrm.partner.controller.partner_saved_message'),
             $this->get('orocrm_partner.form.handler.partner')
         );
     }
@@ -127,7 +127,7 @@ class PartnerController extends Controller
      * @AclAncestor("orocrm_partner_view")
      * @Template()
      */
-    public function accountinfoAction(Account $account)
+    public function accountInfoAction(Account $account)
     {
         return [
             'account' => $account

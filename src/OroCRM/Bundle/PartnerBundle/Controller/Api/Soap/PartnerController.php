@@ -15,7 +15,7 @@ class PartnerController extends SoapController
      * @Soap\Method("getPartners")
      * @Soap\Param("page", phpType="int")
      * @Soap\Param("limit", phpType="int")
-     * @Soap\Result(phpType = "OroCRM\Bundle\PartnerBundle\Entity\Partner[]")
+     * @Soap\Result(phpType = "OroCRM\Bundle\PartnerBundle\Entity\PartnerSoap[]")
      */
     public function cgetAction($page = 1, $limit = 10)
     {
@@ -25,7 +25,7 @@ class PartnerController extends SoapController
     /**
      * @Soap\Method("getPartner")
      * @Soap\Param("id", phpType = "int")
-     * @Soap\Result(phpType = "OroCRM\Bundle\PartnerBundle\Entity\Partner")
+     * @Soap\Result(phpType = "OroCRM\Bundle\PartnerBundle\Entity\PartnerSoap")
      */
     public function getAction($id)
     {
@@ -34,7 +34,7 @@ class PartnerController extends SoapController
 
     /**
      * @Soap\Method("createPartner")
-     * @Soap\Param("partner", phpType = "OroCRM\Bundle\PartnerBundle\Entity\Partner")
+     * @Soap\Param("partner", phpType = "OroCRM\Bundle\PartnerBundle\Entity\PartnerSoap")
      * @Soap\Result(phpType = "int")
      */
     public function createAction($partner)
@@ -45,7 +45,7 @@ class PartnerController extends SoapController
     /**
      * @Soap\Method("updatePartner")
      * @Soap\Param("id", phpType = "int")
-     * @Soap\Param("partner", phpType = "OroCRM\Bundle\PartnerBundle\Entity\Partner")
+     * @Soap\Param("partner", phpType = "OroCRM\Bundle\PartnerBundle\Entity\PartnerSoap")
      * @Soap\Result(phpType = "boolean")
      */
     public function updateAction($id, $partner)

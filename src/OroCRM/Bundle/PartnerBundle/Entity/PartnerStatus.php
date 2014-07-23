@@ -14,25 +14,24 @@ use Gedmo\Translatable\Translatable;
  */
 class PartnerStatus implements Translatable
 {
-    const STATUS_ACTIVE        = 'active';
-    const STATUS_DISABLE       = 'disable';
-
-    /**
-     * @var integer
-     *
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+    const STATUS_ACTIVE = 'active';
+    const STATUS_DISABLE = 'disable';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="status", type="string", length=64)
+     * @ORM\Id
+     * @ORM\Column(name="name", type="string", length=16)
+     */
+    protected $name;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="label", type="string", length=255)
      * @Gedmo\Translatable
      */
-    protected $status;
+    protected $label;
 
     /**
      * @var integer
@@ -47,19 +46,19 @@ class PartnerStatus implements Translatable
     protected $locale;
 
     /**
-     * @param string $status
+     * @param string $name
      */
-    public function __construct($status)
+    public function __construct($name)
     {
-        $this->status = $status;
+        $this->name = $name;
     }
 
     /**
      * @return integer
      */
-    public function getId()
+    public function getName()
     {
-        return $this->id;
+        return $this->name;
     }
 
     /**
@@ -67,9 +66,9 @@ class PartnerStatus implements Translatable
      *
      * @return PartnerStatus
      */
-    public function setStatus($status)
+    public function setLabel($status)
     {
-        $this->status = $status;
+        $this->label = $status;
 
         return $this;
     }
@@ -77,9 +76,9 @@ class PartnerStatus implements Translatable
     /**
      * @return string
      */
-    public function getStatus()
+    public function getLabel()
     {
-        return $this->status;
+        return $this->label;
     }
 
     /**
@@ -106,10 +105,9 @@ class PartnerStatus implements Translatable
      * Set locale for translation
      *
      * @param string $locale
-     *
      * @return PartnerStatus
      */
-    public function setTranslatableLocale($locale)
+    public function setLocale($locale)
     {
         $this->locale = $locale;
 
@@ -121,6 +119,6 @@ class PartnerStatus implements Translatable
      */
     public function __toString()
     {
-        return (string) $this->status;
+        return (string) $this->getName();
     }
 }

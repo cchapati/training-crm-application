@@ -5,10 +5,12 @@ namespace OroCRM\Bundle\PartnerBundle\Migrations\Data\Demo\ORM;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
+use Doctrine\ORM\EntityManager;
 
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+use OroCRM\Bundle\AccountBundle\Entity\Account;
 use OroCRM\Bundle\PartnerBundle\Entity\Partner;
 
 class LoadPartnerData extends AbstractFixture implements ContainerAwareInterface, DependentFixtureInterface
@@ -60,27 +62,45 @@ class LoadPartnerData extends AbstractFixture implements ContainerAwareInterface
     /**
      * {@inheritDoc}
      */
-    public function load(ObjectManager $om)
+    public function load(ObjectManager $objectManager)
     {
-        $numberConditions = count(self::$fixtureConditions) - 1;
-        $accounts = $om->getRepository('OroCRMAccountBundle:Account')->findAll();
-        $users = $om->getRepository('OroUserBundle:User')->findAll();
-        $statuses = $om->getRepository('OroCRMPartnerBundle:PartnerStatus')->findAll();;
-        $numberUsers = count($users)-1;
-        $numberStatuses = count($statuses) - 1;
+        $accounts = $this->getAccountsWithoutPartners($objectManager, count(self::$fixtureConditions));
 
-        foreach ($accounts as $account) {
-
-            if (!$om->getRepository('OroCRMPartnerBundle:Partner')->findOneBy(['account' => $account])) {
-                $partner = new Partner();
-                $partner->setAccount($account);
-                $partner->setOwner($users[rand(0, $numberUsers)]);
-                $partner->setStatus($statuses[rand(0, $numberStatuses)]);
-                $partner->setPartnerCondition(self::$fixtureConditions[rand(0, $numberConditions)]);
-                $om->persist($partner);
-            }
+        if (!$accounts) {
+            return;
         }
 
-        $om->flush();
+        $users = $objectManager->getRepository('OroUserBundle:User')->findAll();
+        $statuses = $objectManager->getRepository('OroCRMPartnerBundle:PartnerStatus')->findAll();
+        $usersCount = count($users);
+        $statusesCount = count($statuses);
+
+        foreach ($accounts as $index => $account) {
+            $partner = new Partner();
+            $partner->setAccount($account);
+            $partner->setOwner($users[rand(0, $usersCount - 1)]);
+            $partner->setStatus($statuses[rand(0, $statusesCount - 1)]);
+            $partner->setPartnerCondition(self::$fixtureConditions[$index]);
+            $objectManager->persist($partner);
+        }
+
+        $objectManager->flush();
+    }
+
+    /**
+     * @param EntityManager $entityManager
+     * @param int $limit
+     * @return Account[]
+     */
+    protected function getAccountsWithoutPartners(EntityManager $entityManager, $limit)
+    {
+        return $entityManager->getRepository('OroCRMAccountBundle:Account')
+            ->createQueryBuilder('account')
+            ->select('account')
+            ->leftJoin('OroCRMPartnerBundle:Partner', 'partner', 'WITH', 'partner.account = account')
+            ->where('partner.id IS NULL')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
     }
 }

@@ -56,13 +56,10 @@ class OroCRMPartnerExtensions implements
     }
 
     /**
-     * @inheritdoc
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * {@inheritdoc}
      */
     public function up(Schema $schema, QueryBag $queries)
     {
-        // @codingStandardsIgnoreStart
-
         $this->attachmentExtension->addFileRelation($schema, 'orocrm_partner', 'contract', 'file', [], 7);
 
         $this->attachmentExtension->addAttachmentAssociation(
@@ -86,7 +83,5 @@ class OroCRMPartnerExtensions implements
         $this->noteExtension->addNoteAssociation($schema, 'orocrm_partner');
 
         $this->activityExtension->addActivityAssociation($schema, 'oro_email', 'orocrm_partner');
-
-        // @codingStandardsIgnoreEnd
     }
 }

@@ -4,25 +4,20 @@ namespace OroCRM\Bundle\PartnerBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-use BeSimple\SoapBundle\ServiceDefinition\Annotation as Soap;
-
-use Oro\Bundle\DataAuditBundle\Metadata\Annotation as Oro;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
 use Oro\Bundle\UserBundle\Entity\User;
 
 use OroCRM\Bundle\PartnerBundle\Model\ExtendPartner;
-use OroCRM\Bundle\PartnerBundle\Entity\PartnerStatus;
 use OroCRM\Bundle\AccountBundle\Entity\Account;
 
 /**
  * @ORM\Entity()
  * @ORM\Table(name="orocrm_partner")
- * @Oro\Loggable
  * @ORM\HasLifecycleCallbacks()
  * @Config(
- *      routeName="orocrm_account_index",
- *      routeView="orocrm_account_view",
+ *      routeName="orocrm_partner_index",
+ *      routeView="orocrm_partner_view",
  *      defaultValues={
  *          "entity"={
  *              "icon"="icon-suitcase"
@@ -48,7 +43,6 @@ class Partner extends ExtendPartner
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Soap\ComplexType("int", nillable=true)
      */
     protected $id;
 
@@ -56,8 +50,6 @@ class Partner extends ExtendPartner
      * @var \DateTime
      *
      * @ORM\Column(name="start_date", type="date")
-     * @Soap\ComplexType("dateTime", nillable=true)
-     * @Oro\Versioned
      * @ConfigField(
      *      defaultValues={
      *          "dataaudit"={
@@ -72,8 +64,6 @@ class Partner extends ExtendPartner
      * @var string
      *
      * @ORM\Column(name="partner_condition", type="text", nullable=true)
-     * @Soap\ComplexType("string", nillable=true)
-     * @Oro\Versioned
      * @ConfigField(
      *      defaultValues={
      *          "dataaudit"={
@@ -88,9 +78,7 @@ class Partner extends ExtendPartner
      * @var PartnerStatus
      *
      * @ORM\ManyToOne(targetEntity="PartnerStatus", cascade={"persist"})
-     * @ORM\JoinColumn(name="status_id", referencedColumnName="id", onDelete="SET NULL")
-     * @Soap\ComplexType("string", nillable=false)
-     * @Oro\Versioned
+     * @ORM\JoinColumn(name="status", referencedColumnName="name", onDelete="SET NULL")
      * @ConfigField(
      *      defaultValues={
      *          "dataaudit"={
@@ -105,8 +93,6 @@ class Partner extends ExtendPartner
      * @var User
      * @ORM\ManyToOne(targetEntity="Oro\Bundle\UserBundle\Entity\User")
      * @ORM\JoinColumn(name="user_owner_id", referencedColumnName="id", onDelete="SET NULL")
-     * @Soap\ComplexType("string", nillable=false)
-     * @Oro\Versioned
      * @ConfigField(
      *      defaultValues={
      *          "dataaudit"={
@@ -122,8 +108,6 @@ class Partner extends ExtendPartner
      *
      * @ORM\OneToOne(targetEntity="OroCRM\Bundle\AccountBundle\Entity\Account")
      * @ORM\JoinColumn(name="account_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
-     * @Soap\ComplexType("string", nillable=false)
-     * @Oro\Versioned
      * @ConfigField(
      *      defaultValues={
      *          "dataaudit"={
@@ -162,7 +146,7 @@ class Partner extends ExtendPartner
     }
 
     /**
-     * @param \Oro\Bundle\UserBundle\Entity\User $owner
+     * @param User $owner
      * @return Partner
      */
     public function setOwner($owner)
@@ -173,7 +157,7 @@ class Partner extends ExtendPartner
     }
 
     /**
-     * @return \Oro\Bundle\UserBundle\Entity\User
+     * @return User
      */
     public function getOwner()
     {
@@ -192,7 +176,7 @@ class Partner extends ExtendPartner
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTime|null
      */
     public function getStartDate()
     {
@@ -200,7 +184,7 @@ class Partner extends ExtendPartner
     }
 
     /**
-     * @param \OroCRM\Bundle\AccountBundle\Entity\Account $account
+     * @param Account $account
      * @return Partner
      */
     public function setAccount($account)
@@ -211,7 +195,7 @@ class Partner extends ExtendPartner
     }
 
     /**
-     * @return \OroCRM\Bundle\AccountBundle\Entity\Account
+     * @return Account|null
      */
     public function getAccount()
     {
@@ -220,7 +204,6 @@ class Partner extends ExtendPartner
 
     /**
      * @param PartnerStatus $status
-     *
      * @return Partner
      */
     public function setStatus($status)
@@ -231,11 +214,21 @@ class Partner extends ExtendPartner
     }
 
     /**
-     * @return PartnerStatus
+     * @return PartnerStatus|null
      */
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * Get email from account
+     *
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->getAccount() ? $this->getAccount()->getEmail() : null;
     }
 
     /**
@@ -248,18 +241,11 @@ class Partner extends ExtendPartner
         $this->startDate = new \DateTime('now', new \DateTimeZone('UTC'));
     }
 
-    public function __toString()
-    {
-        return (string) $this->getAccount()?$this->getAccount()->getName():'';
-    }
-
     /**
-     * Get email from account
-     *
      * @return string
      */
-    public function getEmail()
+    public function __toString()
     {
-        return $this->getAccount()?$this->getAccount()->getEmail():null;
+        return $this->getAccount() ? (string) $this->getAccount()->getName() : '';
     }
 }

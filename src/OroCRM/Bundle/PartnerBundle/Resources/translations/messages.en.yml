@@ -23,4 +23,4 @@ orocrm:
             partner_information:    Partner Information
 
         controller:
-            partner.saved.message:  Partner saved
+            partner_saved_message:  Partner saved

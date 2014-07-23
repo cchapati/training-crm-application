@@ -7,9 +7,10 @@ use Symfony\Component\HttpFoundation\Request;
 
 use Doctrine\Common\Persistence\ObjectManager;
 
+use Oro\Bundle\SoapBundle\Form\Handler\ApiFormHandler;
 use OroCRM\Bundle\PartnerBundle\Entity\Partner;
 
-class PartnerHandler
+class PartnerHandler extends ApiFormHandler
 {
     /**
      * @var FormInterface
@@ -37,29 +38,6 @@ class PartnerHandler
         $this->form    = $form;
         $this->request = $request;
         $this->manager = $manager;
-    }
-
-    /**
-     * Process form
-     *
-     * @param  Partner $entity
-     * @return bool True on successful processing, false otherwise
-     */
-    public function process(Partner $entity)
-    {
-        $this->form->setData($entity);
-
-        if (in_array($this->request->getMethod(), array('POST', 'PUT'))) {
-            $this->form->submit($this->request);
-
-            if ($this->form->isValid()) {
-                $this->onSuccess($entity);
-
-                return true;
-            }
-        }
-
-        return false;
     }
 
     /**

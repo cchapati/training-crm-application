@@ -13,7 +13,7 @@ services:
         class:                                      Symfony\Component\Form\Form
         factory_method: createNamed
         factory_service: form.factory
-        arguments: ["orocrm_partner_form", "orocrm_partner", null]
+        arguments: [orocrm_partner_form, orocrm_partner]
 
     orocrm_partner.form.type.partner:
         class:                                      %orocrm_partner.type.partner.class%
@@ -45,13 +45,13 @@ services:
             - @oro_locale.formatter.name
             - @oro_security.security_facade
         tags:
-            - { name: form.type, alias: partner }
+            - { name: form.type, alias: orocrm_partner_api }
 
     orocrm_partner.form.partner.api:
         class:                                      Symfony\Component\Form\Form
         factory_method: createNamed
         factory_service: form.factory
-        arguments: ["partner", "partner", null]
+        arguments: [partner, orocrm_partner_api]
 
     orocrm_partner.form.handler.partner.api:
         class:                                      %orocrm_partner.handler.partner.class%

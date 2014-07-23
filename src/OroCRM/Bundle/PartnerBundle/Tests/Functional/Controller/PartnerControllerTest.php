@@ -1,9 +1,9 @@
 <?php
 
-namespace OroCRM\Bundle\PartnerBundle\Tests\Functional;
+namespace OroCRM\Bundle\PartnerBundle\Tests\Functional\Controller;
 
-use Symfony\Component\DomCrawler\Form;
-
+use Oro\Bundle\UserBundle\Entity\User;
+use OroCRM\Bundle\PartnerBundle\Entity\PartnerStatus;
 use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
 
 /**
@@ -12,37 +12,27 @@ use Oro\Bundle\TestFrameworkBundle\Test\WebTestCase;
  */
 class PartnerControllerTest extends WebTestCase
 {
+    /**
+     * @var User
+     */
+    protected $adminUser;
+
     protected function setUp()
     {
-        $this->initClient(
-            [],
-            array_merge($this->generateBasicAuthHeader(), array('HTTP_X-CSRF-Header' => 1))
-        );
-    }
+        $this->initClient([], $this->generateBasicAuthHeader());
 
-    public function testIndex()
-    {
-        $this->client->request('GET', $this->getUrl('orocrm_partner_index'));
-        $result = $this->client->getResponse();
-        $this->assertHtmlResponseStatusCodeEquals($result, 200);
+        $this->loadFixtures(['OroCRM\Bundle\PartnerBundle\Tests\Functional\DataFixtures\LoadAccountData']);
+
+        $this->adminUser = $this->getContainer()->get('doctrine')
+            ->getRepository('OroUserBundle:User')->findOneByUsername('admin');
     }
 
     public function testCreate()
     {
-        $this->loadFixtures(
-            [
-                'OroCRM\Bundle\PartnerBundle\Tests\Functional\DataFixtures\LoadAccountData',
-            ],
-            true
-        );
         $crawler = $this->client->request('GET', $this->getUrl('orocrm_partner_create'));
-        /** @var Form $form */
         $form = $crawler->selectButton('Save and Close')->form();
-        $form['orocrm_partner_form[account]'] = $this->getContainer()
-            ->get('doctrine')
-            ->getRepository('OroCRMAccountBundle:Account')
-            ->findOneByName('Test Account')
-            ->getId();
+        $form['orocrm_partner_form[status]'] = PartnerStatus::STATUS_ACTIVE;
+        $form['orocrm_partner_form[account]'] = $this->getReference('orocrm_partner:test_account_1')->getId();
         $form['orocrm_partner_form[partnerCondition]'] = 'Test condition';
         $form['orocrm_partner_form[owner]'] = 1;
 
@@ -52,6 +42,17 @@ class PartnerControllerTest extends WebTestCase
         $result = $this->client->getResponse();
         $this->assertHtmlResponseStatusCodeEquals($result, 200);
         $this->assertContains("Partner saved", $crawler->html());
+    }
+
+    /**
+     * @depends testCreate
+     */
+    public function testIndex()
+    {
+        $this->client->request('GET', $this->getUrl('orocrm_partner_index'));
+        $response = $this->client->getResponse();
+        $this->assertHtmlResponseStatusCodeEquals($response, 200);
+        $this->assertContains('Test condition', $response->getContent());
     }
 
     /**
@@ -72,7 +73,7 @@ class PartnerControllerTest extends WebTestCase
             'GET',
             $this->getUrl('orocrm_partner_update', array('id' => $result['id']))
         );
-        /** @var Form $form */
+
         $form = $crawler->selectButton('Save and Close')->form();
         $form['orocrm_partner_form[partnerCondition]'] = 'Condition update';
 
@@ -96,25 +97,13 @@ class PartnerControllerTest extends WebTestCase
             $this->getUrl('orocrm_partner_view', array('id' => $id))
         );
 
-        $result = $this->client->getResponse();
-        $this->assertHtmlResponseStatusCodeEquals($result, 200);
-        $this->assertContains("Test Account - View", $crawler->html());
-    }
-
-
-    /**
-     * @depends testUpdate
-     */
-    public function testDelete($id)
-    {
-        $this->client->request(
-            'DELETE',
-            $this->getUrl('oro_api_delete_partner', array('id' => $id))
+        $response = $this->client->getResponse();
+        file_put_contents('/tmp/test.html', $response->getContent());
+        $this->assertHtmlResponseStatusCodeEquals($response, 200);
+        $this->assertContains(
+            $this->getReference('orocrm_partner:test_account_1')->getName()
+            . " - View - Partners",
+            $crawler->html()
         );
-        $result = $this->client->getResponse();
-        $this->assertJsonResponseStatusCodeEquals($result, 204);
-        $this->client->request('GET', $this->getUrl('orocrm_partner_view', array('id' => $id)));
-        $result = $this->client->getResponse();
-        $this->assertHtmlResponseStatusCodeEquals($result, 404);
     }
 }

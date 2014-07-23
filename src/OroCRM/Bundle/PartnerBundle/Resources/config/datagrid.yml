@@ -13,7 +13,7 @@ datagrid:
                     - account.updatedAt
                     - partner.startDate as startDate
                     - partner.partnerCondition as condition
-                    - partnerStatus.status as status
+                    - partnerStatus.label as status
                     - CONCAT(partnerOwner.firstName, CONCAT(' ', partnerOwner.lastName)) as ownerName
                 from:
                     - { table: OroCRMPartnerBundle:Partner, alias: partner }
@@ -54,7 +54,7 @@ datagrid:
                 params:     [ id ]
             delete_link:
                 type:       url
-                route:      oro_api_delete_partner
+                route:      orocrm_partner_api_delete_partner
                 params:     [ id ]
         sorters:
             columns:

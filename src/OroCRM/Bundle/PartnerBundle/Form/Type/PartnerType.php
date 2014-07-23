@@ -44,17 +44,9 @@ class PartnerType extends AbstractType
                     'label'         => 'orocrm.partner.status.label',
                     'class'         => 'OroCRMPartnerBundle:PartnerStatus',
                     'query_builder' => function (EntityRepository $entityRepository) {
-                            return $entityRepository->createQueryBuilder('partnerStatus')
-                                ->orderBy('partnerStatus.order', 'ASC');
-                        }
-                ]
-            )
-            ->add(
-                'owner',
-                'oro_user_select',
-                [
-                    'required' => false,
-                    'label' => 'orocrm.partner.owner.label',
+                        return $entityRepository->createQueryBuilder('partnerStatus')
+                            ->orderBy('partnerStatus.order', 'ASC');
+                    }
                 ]
             );
     }
