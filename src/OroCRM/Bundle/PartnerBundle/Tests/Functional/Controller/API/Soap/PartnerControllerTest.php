@@ -16,7 +16,7 @@ class PartnerControllerTest extends WebTestCase
      * @var array
      */
     protected $partnerCreateData = [
-        'owner' => '1',
+        'owner' => null,
         'status' => PartnerStatus::STATUS_ACTIVE,
         'partnerCondition' => 'Test Condition',
         'account' => null,
@@ -38,6 +38,8 @@ class PartnerControllerTest extends WebTestCase
         $this->adminUser = $this->getContainer()->get('doctrine')
             ->getRepository('OroUserBundle:User')->findOneByUsername('admin');
         $this->assertNotEmpty($this->adminUser);
+
+        $this->partnerPostData['owner'] = $this->adminUser->getId();
     }
 
     /**
@@ -66,13 +68,13 @@ class PartnerControllerTest extends WebTestCase
         $partner = $result['item'];
 
         $this->assertArrayIntersectEquals(
-            array(
+            [
                 'id' => $id,
                 'partnerCondition' => $this->partnerCreateData['partnerCondition'],
                 'status' => $this->partnerCreateData['status'],
                 'account' => $this->getReference('orocrm_partner:test_account_1')->getId(),
                 'owner' => $this->adminUser->getId(),
-            ),
+            ],
             $partner
         );
 
@@ -91,13 +93,13 @@ class PartnerControllerTest extends WebTestCase
         $partner = $this->valueToArray($result);
 
         $this->assertArrayIntersectEquals(
-            array(
+            [
                 'id' => $id,
                 'partnerCondition' => $this->partnerCreateData['partnerCondition'],
                 'status' => $this->partnerCreateData['status'],
                 'account' => $this->getReference('orocrm_partner:test_account_1')->getId(),
                 'owner' => $this->adminUser->getId(),
-            ),
+            ],
             $partner
         );
 
@@ -106,10 +108,10 @@ class PartnerControllerTest extends WebTestCase
 
         return $partner;
     }
+
     /**
      * @depends testGet
      * @param array $originalPartner
-     * @return integer
      */
     public function testUpdate(array $originalPartner)
     {
@@ -133,8 +135,6 @@ class PartnerControllerTest extends WebTestCase
         $expectedPartner = array_merge($originalPartner, $updateData);
 
         $this->assertArrayIntersectEquals($expectedPartner, $updatedPartner);
-
-        return $id;
     }
 
     /**

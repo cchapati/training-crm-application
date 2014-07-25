@@ -16,7 +16,7 @@ class PartnerControllerTest extends WebTestCase
      * @var array
      */
     protected $partnerPostData = [
-        'owner' => '1',
+        'owner' => null,
         'status' => PartnerStatus::STATUS_ACTIVE,
         'partnerCondition' => 'Test Condition',
         'account' => null,
@@ -37,6 +37,8 @@ class PartnerControllerTest extends WebTestCase
         $this->adminUser = $this->getContainer()->get('doctrine')
             ->getRepository('OroUserBundle:User')->findOneByUsername('admin');
         $this->assertNotEmpty($this->adminUser);
+
+        $this->partnerPostData['owner'] = $this->adminUser->getId();
     }
 
     /**

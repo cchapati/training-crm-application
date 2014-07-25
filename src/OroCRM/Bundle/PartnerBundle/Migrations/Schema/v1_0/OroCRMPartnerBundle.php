@@ -1,6 +1,6 @@
 <?php
 
-namespace OroCRM\Bundle\AccountBundle\Migrations\Schema\v1_0;
+namespace OroCRM\Bundle\PartnerBundle\Migrations\Schema\v1_0;
 
 use Doctrine\DBAL\Schema\Schema;
 
@@ -13,6 +13,11 @@ class OroCRMPartnerBundle implements Migration
      * @inheritdoc
      */
     public function up(Schema $schema, QueryBag $queries)
+    {
+        self::createPartnerTables($schema);
+    }
+
+    static public function createPartnerTables(Schema $schema)
     {
         /** Generate table orocrm_partner **/
         $table = $schema->createTable('orocrm_partner');
