@@ -74,20 +74,6 @@
 
     {% set dataBlocks = dataBlocks|merge(accountSectionBlock) %}
 
-    {% set dynamicFields = oro_get_dynamic_fields(entity) %}
-
-    {% if dynamicFields is defined and dynamicFields|length %}
-        {% set additionalSectionBlock = [
-            {
-                'title': 'orocrm.partner.sections.additional'|trans,
-                'subblocks': [{
-                    'data': [entityConfig.renderDynamicFields(entity)]
-                }]
-            }
-        ] %}
-        {% set dataBlocks = dataBlocks|merge(additionalSectionBlock) %}
-    {% endif %}
-
     {% set id = 'partnerView' %}
     {% set data = {'dataBlocks': dataBlocks} %}
 

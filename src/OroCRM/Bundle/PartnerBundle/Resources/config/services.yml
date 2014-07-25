@@ -6,8 +6,6 @@ parameters:
     orocrm_partner.partner.manager.api.class:       Oro\Bundle\SoapBundle\Entity\Manager\ApiEntityManager
     orocrm_partner.type.partner.api.class:          OroCRM\Bundle\PartnerBundle\Form\Type\PartnerApiType
 
-    orocrm_partner.activity_widget_provider.class:  %oro_activity.widget_provider.activities.menu.class%
-
 services:
     orocrm_partner.form.partner:
         class:                                      Symfony\Component\Form\Form

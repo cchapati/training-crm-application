@@ -34,6 +34,6 @@ OroCRM\Bundle\PartnerBundle\Entity\Partner:
             relation_type: many-to-one
             relation_fields:
                 -
-                    name: status
+                    name: name
                     target_type: text
-                    target_fields: [status]
+                    target_fields: [name]

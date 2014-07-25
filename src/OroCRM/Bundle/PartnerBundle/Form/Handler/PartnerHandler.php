@@ -8,7 +8,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 
 use Oro\Bundle\SoapBundle\Form\Handler\ApiFormHandler;
-use OroCRM\Bundle\PartnerBundle\Entity\Partner;
 
 class PartnerHandler extends ApiFormHandler
 {
@@ -43,9 +42,9 @@ class PartnerHandler extends ApiFormHandler
     /**
      * "Success" form handler
      *
-     * @param Partner $entity
+     * @param mixed $entity
      */
-    protected function onSuccess(Partner $entity)
+    protected function onSuccess($entity)
     {
         $this->manager->persist($entity);
         $this->manager->flush($entity);

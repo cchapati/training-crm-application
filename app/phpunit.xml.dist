@@ -19,37 +19,37 @@
 
     <testsuites>
         <testsuite name="Project Test Suite">
-            <directory suffix="Test.php">../src/*/src/*/Component/*/Tests/Unit</directory>
-            <directory suffix="Test.php">../src/*/src/*/Bundle/*Bundle/Tests/Unit</directory>
-            <directory suffix="Test.php">../src/*/src/*/Bundle/*Bundle/Tests/Functional</directory>
+            <directory suffix="Test.php">../src/*/Component/*/Tests/Unit</directory>
+            <directory suffix="Test.php">../src/*/Bundle/*Bundle/Tests/Unit</directory>
+            <directory suffix="Test.php">../src/*/Bundle/*Bundle/Tests/Functional</directory>
         </testsuite>
         <testsuite name="Unit Tests">
-            <directory suffix="Test.php">../src/*/src/*/Component/*/Tests/Unit</directory>
+            <directory suffix="Test.php">../src/*/Component/*/Tests/Unit</directory>
             <directory suffix="Test.php">../src/*/src/*/Bundle/*Bundle/Tests/Unit</directory>
         </testsuite>
         <testsuite name="Functional Tests">
-            <directory suffix="Test.php">../src/*/src/*/Bundle/*Bundle/Tests/Functional</directory>
+            <directory suffix="Test.php">../src/*/Bundle/*Bundle/Tests/Functional</directory>
         </testsuite>
         <testsuite name="Project OroCRM Unit Tests">
-            <directory suffix="Test.php">../src/OroCRM/src/OroCRM/Bundle/*Bundle/Tests/Unit</directory>
-            <directory suffix="Test.php">../src/OroCRMPackages/src/OroCRM/Bundle/*Bundle/Tests/Unit</directory>
+            <directory suffix="Test.php">../src/OroCRM/Bundle/*Bundle/Tests/Unit</directory>
+            <directory suffix="Test.php">../src/OroCRM/Bundle/*Bundle/Tests/Unit</directory>
         </testsuite>
         <testsuite name="Project OroCRM Functional Tests">
-            <directory suffix="Test.php">../src/OroCRM/src/OroCRM/Bundle/*Bundle/Tests/Functional</directory>
-            <directory suffix="Test.php">../src/OroCRMPackages/src/OroCRM/Bundle/*Bundle/Tests/Functional</directory>
+            <directory suffix="Test.php">../src/OroCRM/Bundle/*Bundle/Tests/Functional</directory>
+            <directory suffix="Test.php">../src/OroCRM/Bundle/*Bundle/Tests/Functional</directory>
         </testsuite>
         <testsuite name="Project Oro Unit Tests">
-            <directory suffix="Test.php">../src/Oro/src/Oro/Component/*/Tests/Unit</directory>
-            <directory suffix="Test.php">../src/Oro/src/Oro/Bundle/*Bundle/Tests/Unit</directory>
+            <directory suffix="Test.php">../src/Oro/Component/*/Tests/Unit</directory>
+            <directory suffix="Test.php">../src/Oro/Bundle/*Bundle/Tests/Unit</directory>
         </testsuite>
         <testsuite name="Project Oro Functional Tests">
-            <directory suffix="Test.php">../src/Oro/src/Oro/Bundle/*Bundle/Tests/Functional</directory>
+            <directory suffix="Test.php">../src/Oro/Bundle/*Bundle/Tests/Functional</directory>
         </testsuite>
         <testsuite name="Project Selenium Tests">
-            <directory suffix="Test.php">../src/*/src/*/Bundle/*Bundle/Tests/Selenium</directory>
+            <directory suffix="Test.php">../src/*/Bundle/*Bundle/Tests/Selenium</directory>
         </testsuite>
         <testsuite name="Project Behat Tests">
-            <directory suffix="Test.php">../src/Oro*/src/Oro*/Bundle/*Bundle/Tests/Behat</directory>
+            <directory suffix="Test.php">../src/Oro*/Bundle/*Bundle/Tests/Behat</directory>
         </testsuite>
     </testsuites>
 
@@ -78,7 +78,7 @@
         <const name="PHPUNIT_TESTSUITE_EXTENSION_SELENIUM_PASS" value="admin"/>
     </php>
     <listeners>
-        <listener class="TestListener" file="src/Oro/src/Oro/Bundle/TestFrameworkBundle/Test/TestListener.php">
+        <listener class="TestListener" file="vendor/oro/platform/src/Oro/Bundle/TestFrameworkBundle/Test/TestListener.php">
             <arguments>
                 <string>app/logs</string>
             </arguments>
@@ -97,12 +97,12 @@
                 <directory>../src/*/Bundle/*Bundle/Resources</directory>
                 <directory>../src/*/Bundle/*Bundle/Tests</directory>
                 <directory>../src/*/Bundle/*Bundle/vendor</directory>
-                <directory>../src/*/src/*/Bundle/*Bundle/DataFixtures</directory>
-                <directory>../src/*/src/*/Bundle/*Bundle/Resources</directory>
-                <directory>../src/*/src/*/Bundle/*Bundle/Tests</directory>
-                <directory>../src/*/src/*/Bundle/*Bundle/vendor</directory>
-                <directory>../src/*/src/*/Bundle/*Bundle/DependencyInjection</directory>
-                <directory suffix="Bundle.php">../src/*/src/*/Bundle/*Bundle</directory>
+                <directory>../src/*/Bundle/*Bundle/DataFixtures</directory>
+                <directory>../src/*/Bundle/*Bundle/Resources</directory>
+                <directory>../src/*/Bundle/*Bundle/Tests</directory>
+                <directory>../src/*/Bundle/*Bundle/vendor</directory>
+                <directory>../src/*/Bundle/*Bundle/DependencyInjection</directory>
+                <directory suffix="Bundle.php">../src/*/Bundle/*Bundle</directory>
                 <directory>../src/*/Bundle/*Bundle/DependencyInjection</directory>
                 <directory suffix="Bundle.php">../src/*/Bundle/*Bundle</directory>
             </exclude>
