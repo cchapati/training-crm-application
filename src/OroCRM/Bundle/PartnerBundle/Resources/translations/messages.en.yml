@@ -28,3 +28,4 @@ orocrm:
         system_configuration:
             username: Api User
             api_token: Api Token
+            repositories: Repositories
