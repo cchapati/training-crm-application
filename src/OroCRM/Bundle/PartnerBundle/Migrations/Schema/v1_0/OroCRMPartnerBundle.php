@@ -43,7 +43,7 @@ class OroCRMPartnerBundle implements Migration
         /** End of generate foreign keys for table orocrm_partner_git_hub **/
     }
 
-    static public function createPartnerTables(Schema $schema)
+    public static function createPartnerTables(Schema $schema)
     {
         /** Generate table orocrm_partner **/
         $table = $schema->createTable('orocrm_partner');
