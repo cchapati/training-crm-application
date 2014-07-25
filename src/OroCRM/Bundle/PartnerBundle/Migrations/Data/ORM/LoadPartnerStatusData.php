@@ -15,8 +15,8 @@ class LoadPartnerStatusData extends AbstractTranslatableEntityFixture
      * @var array
      */
     protected $statusNames = [
-        1 => PartnerStatus::STATUS_ACTIVE,
-        2 => PartnerStatus::STATUS_DISABLE,
+        PartnerStatus::STATUS_ACTIVE,
+        PartnerStatus::STATUS_DISABLE,
     ];
 
     /**

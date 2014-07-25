@@ -62,13 +62,13 @@ class PartnerStatus implements Translatable
     }
 
     /**
-     * @param string $status
+     * @param string $label
      *
      * @return PartnerStatus
      */
-    public function setLabel($status)
+    public function setLabel($label)
     {
-        $this->label = $status;
+        $this->label = $label;
 
         return $this;
     }
