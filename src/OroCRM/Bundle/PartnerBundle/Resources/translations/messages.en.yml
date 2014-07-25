@@ -15,6 +15,15 @@ orocrm:
             additional:             Additional Information
         datagrid.delete:            Delete
 
+        partnergithub:
+          entity_plural_label:  Partner GitHub account
+          entity_label:         Partner GitHub accounts
+          id.label:             Id
+          email.label:          Email
+          name.label:           Name
+          username.label:       Username
+          partner.label:        Partner
+
         account:
             created_at.label:       Account Created
             updated_at.label:       Account Updated
