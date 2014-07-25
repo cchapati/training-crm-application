@@ -24,7 +24,10 @@ class PartnerStatusTest extends \PHPUnit_Framework_TestCase
     public function testSettersAndGetters($property, $value, $expected)
     {
         call_user_func_array(array($this->partnerStatus, 'set' . ucfirst($property)), array($value));
-        $this->assertSame($expected, call_user_func_array(array($this->partnerStatus, 'get' . ucfirst($property)), array()));
+        $this->assertSame(
+            $expected,
+            call_user_func_array(array($this->partnerStatus, 'get' . ucfirst($property)), array())
+        );
     }
 
     public function settersAndGettersDataProvider()

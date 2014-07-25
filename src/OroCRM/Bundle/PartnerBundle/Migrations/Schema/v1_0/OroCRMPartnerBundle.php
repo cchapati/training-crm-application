@@ -17,7 +17,7 @@ class OroCRMPartnerBundle implements Migration
         self::createPartnerTables($schema);
     }
 
-    static public function createPartnerTables(Schema $schema)
+    public static function createPartnerTables(Schema $schema)
     {
         /** Generate table orocrm_partner **/
         $table = $schema->createTable('orocrm_partner');
