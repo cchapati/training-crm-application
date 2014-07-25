@@ -25,5 +25,6 @@ class OroPartnerBundleInstaller implements Installation
     public function up(Schema $schema, QueryBag $queries)
     {
         OroCRMPartnerBundle::createPartnerTables($schema);
+        OroCRMPartnerBundle::createPartnerGitHubTable($schema);
     }
 }
