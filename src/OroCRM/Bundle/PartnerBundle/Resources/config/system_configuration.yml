@@ -1,0 +1,34 @@
+oro_system_configuration:
+    groups:
+        oro_inc_settings:
+            title: 'Oro Inc Settings'
+        git_hub_integration:
+            title: 'GitHub Integration'
+        git_hub_connection:
+            title: 'Connection'
+    fields:
+        oro_partner.github_username:
+            type: text
+            options:
+                label: 'orocrm.partner.system_configuration.username'
+                resettable: false
+
+        oro_partner.github_api_token:
+            type: text
+            options:
+                label: 'orocrm.partner.system_configuration.api_token'
+                resettable: false
+
+    tree:
+        system_configuration:
+            platform:
+                children:
+                    oro_inc_settings:
+                        priority: 255
+                        children:
+                            git_hub_integration:
+                                children:
+                                    git_hub_connection:
+                                        children:
+                                            - oro_partner.github_username
+                                            - oro_partner.github_api_token

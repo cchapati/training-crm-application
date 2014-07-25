@@ -24,3 +24,7 @@ orocrm:
 
         controller:
             partner_saved_message:  Partner saved
+
+        system_configuration:
+            username: Api User
+            api_token: Api Token
