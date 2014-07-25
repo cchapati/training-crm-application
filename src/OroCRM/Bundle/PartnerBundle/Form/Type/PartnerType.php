@@ -46,7 +46,8 @@ class PartnerType extends AbstractType
                     'query_builder' => function (EntityRepository $entityRepository) {
                         return $entityRepository->createQueryBuilder('partnerStatus')
                             ->orderBy('partnerStatus.order', 'ASC');
-                    }
+                    },
+                    'property'      => 'label'
                 ]
             );
     }

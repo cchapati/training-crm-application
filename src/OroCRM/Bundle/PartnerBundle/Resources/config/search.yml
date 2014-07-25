@@ -9,9 +9,9 @@ OroCRM\Bundle\PartnerBundle\Entity\Partner:
     search_template: OroCRMPartnerBundle:Partner:searchResult.html.twig
     fields:
         -
-            name:                   partnerCondition
-            target_type:            text
-            target_fields:          [partnerCondition]
+            name: partnerCondition
+            target_type: text
+            target_fields: [partnerCondition]
         -
             name: account
             relation_type: many-to-one
@@ -19,7 +19,7 @@ OroCRM\Bundle\PartnerBundle\Entity\Partner:
                 -
                     name: name
                     target_type: text
-                    target_fields: [name]
+                    target_fields: [account_name]
         -
             name: owner
             relation_type: many-to-one
@@ -27,7 +27,11 @@ OroCRM\Bundle\PartnerBundle\Entity\Partner:
                 -
                     name: username
                     target_type: text
-                    target_fields: [username]
+                    target_fields: [owner_username]
+                -
+                    name: email
+                    target_type: text
+                    target_fields: [owner_email]
 
         -
             name: status
@@ -36,4 +40,8 @@ OroCRM\Bundle\PartnerBundle\Entity\Partner:
                 -
                     name: name
                     target_type: text
-                    target_fields: [name]
+                    target_fields: [status]
+                -
+                    name: label
+                    target_type: text
+                    target_fields: [status_label]

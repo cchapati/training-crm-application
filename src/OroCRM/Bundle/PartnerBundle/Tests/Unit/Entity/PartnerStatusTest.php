@@ -6,7 +6,7 @@ use OroCRM\Bundle\PartnerBundle\Entity\PartnerStatus;
 
 class PartnerStatusTest extends \PHPUnit_Framework_TestCase
 {
-    const STATUS_EXPECTED = 'active';
+    const STATUS_EXPECTED = PartnerStatus::STATUS_ACTIVE;
 
     /**
      * @var Partner

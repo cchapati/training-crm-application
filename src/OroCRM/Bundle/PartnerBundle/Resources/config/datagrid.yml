@@ -65,7 +65,7 @@ datagrid:
                 ownerName:         { data_name: ownerName }
                 createdAt:         { data_name: account.createdAt }
                 updatedAt:         { data_name: account.updatedAt }
-            default: { name: %oro_datagrid.extension.orm_sorter.class%::DIRECTION_DESC }
+            default: { name: %oro_datagrid.extension.orm_sorter.class%::DIRECTION_ASC }
         filters:
             columns:
                 name:

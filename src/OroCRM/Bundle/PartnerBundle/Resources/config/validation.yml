@@ -1,0 +1,6 @@
+OroCRM\Bundle\PartnerBundle\Entity\Partner:
+    properties:
+        status:
+            - NotBlank: ~
+    constraints:
+        - OroCRM\Bundle\PartnerBundle\Validator\Constraints\UniquePartnerAccount: ~

@@ -90,9 +90,9 @@ doctrine:
             OroDistributionBundle:
                 mapping:   false
                 is_bundle: true
-        metadata_cache_driver:
-            type: service
-            id: doctrine.metadata.cache
+#        metadata_cache_driver:
+#            type: service
+#            id: doctrine.metadata.cache
 
         dql:
             datetime_functions:
