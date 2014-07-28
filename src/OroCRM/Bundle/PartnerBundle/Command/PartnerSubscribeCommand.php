@@ -14,7 +14,7 @@ class PartnerSubscribeCommand extends ContainerAwareCommand
     {
         $this
             ->setName(static::COMMAND_NAME)
-            ->setDescription('Cleans up jobs which exceed the maximum retention time.');
+            ->setDescription('');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
