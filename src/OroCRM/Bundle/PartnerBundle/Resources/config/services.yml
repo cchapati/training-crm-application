@@ -8,6 +8,8 @@ parameters:
 
     orocrm_partner.form.validator.unique_partner_account.class: OroCRM\Bundle\PartnerBundle\Validator\Constraints\UniquePartnerAccountValidator
 
+    orocrm_partner.provider.configuration.class:                OroCRM\Bundle\PartnerBundle\Provider\ConfigurationProvider
+
 services:
     orocrm_partner.form.partner:
         class:                                      Symfony\Component\Form\Form
@@ -67,3 +69,8 @@ services:
             - @doctrine
         tags:
             - { name: validator.constraint_validator, alias: unique_partner_account }
+
+    orocrm_partner.provider.configuration:
+        class: %orocrm_partner.provider.configuration.class%
+        arguments:
+            - @oro_config.global
