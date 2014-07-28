@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
+use Oro\Bundle\NavigationBundle\Annotation\TitleTemplate;
 use Oro\Bundle\SecurityBundle\Annotation\Acl;
 use Oro\Bundle\SecurityBundle\Annotation\AclAncestor;
 
@@ -40,6 +41,7 @@ class PartnerController extends Controller
      *      class="OroCRMPartnerBundle:Partner"
      * )
      * @Template("OroCRMPartnerBundle:Partner:update.html.twig")
+     * @TitleTemplate("Create Partner")
      */
     public function createAction()
     {
@@ -57,6 +59,7 @@ class PartnerController extends Controller
      *      class="OroCRMPartnerBundle:Partner"
      * )
      * @Template()
+     * @TitleTemplate("%partner.name% - Edit")
      */
     public function updateAction(Partner $entity)
     {
@@ -72,6 +75,7 @@ class PartnerController extends Controller
      *      class="OroCRMPartnerBundle:Partner"
      * )
      * @Template()
+     * @TitleTemplate("%partner.name% - View")
      */
     public function viewAction(Partner $partner)
     {
