@@ -1,12 +1,5 @@
 oro_menu_config:
     items:
-        customers_tab:
-            label: 'orocrm.account.menu.customers_tab.label'
-            uri: '#'
-            extras:
-                icon: icon-group
-                position: 10
-
         partner_list:
             label: 'orocrm.partner.entity_plural_label'
             route: 'orocrm_partner_index'
@@ -21,9 +14,3 @@ oro_menu_config:
                 customers_tab:
                     children:
                         partner_list: ~
-
-oro_titles:
-    orocrm_partner_index: ~
-    orocrm_partner_create: 'Create Partner'
-    orocrm_partner_view: '%%partner.name%% - View'
-    orocrm_partner_update: '%%partner.name%% - Edit'
