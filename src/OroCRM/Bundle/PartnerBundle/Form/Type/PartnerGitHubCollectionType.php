@@ -1,0 +1,37 @@
+<?php
+
+namespace OroCRM\Bundle\PartnerBundle\Form\Type;
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+
+class PartnerGitHubCollectionType extends AbstractType
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(
+            array(
+                'type'       => 'oro_partner_git_hub'
+            )
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getParent()
+    {
+        return 'oro_collection';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getName()
+    {
+        return 'oro_partner_git_hub_collection';
+    }
+}

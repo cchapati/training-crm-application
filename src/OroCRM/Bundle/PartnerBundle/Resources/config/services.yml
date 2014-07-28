@@ -1,6 +1,8 @@
 parameters:
     orocrm_partner.partner.entity.class:                        OroCRM\Bundle\PartnerBundle\Entity\Partner
     orocrm_partner.type.partner.class:                          OroCRM\Bundle\PartnerBundle\Form\Type\PartnerType
+    orocrm_partner.form.type.partner_git_hub.class:             OroCRM\Bundle\PartnerBundle\Form\Type\PartnerGitHubType
+    orocrm_partner.form.type.partner_git_hub_collection.class:  OroCRM\Bundle\PartnerBundle\Form\Type\PartnerGitHubCollectionType
     orocrm_partner.handler.partner.class:                       OroCRM\Bundle\PartnerBundle\Form\Handler\PartnerHandler
 
     orocrm_partner.partner.manager.api.class:                   Oro\Bundle\SoapBundle\Entity\Manager\ApiEntityManager
@@ -25,6 +27,16 @@ services:
             - @oro_security.security_facade
         tags:
             - { name: form.type, alias: orocrm_partner }
+
+    orocrm_partner.form.type.partner_git_hub:
+        class: %orocrm_partner.form.type.partner_git_hub.class%
+        tags:
+             - { name: form.type, alias: oro_partner_git_hub }
+
+    orocrm_partner.form.type.partner_git_hub_collection:
+        class: %orocrm_partner.form.type.partner_git_hub_collection.class%
+        tags:
+             - { name: form.type, alias: oro_partner_git_hub_collection }
 
     orocrm_partner.form.handler.partner:
         class:                                      %orocrm_partner.handler.partner.class%

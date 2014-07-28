@@ -31,6 +31,10 @@ orocrm:
         widgets:
             partner_information:    Partner Information
 
+        form:
+            git_hub_accounts.label: GitHub Accounts
+            git_hub_account.label:  GitHub Account
+
         controller:
             partner_saved_message:  Partner saved
 

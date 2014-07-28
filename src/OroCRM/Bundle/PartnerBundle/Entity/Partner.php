@@ -2,6 +2,8 @@
 
 namespace OroCRM\Bundle\PartnerBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
@@ -119,6 +121,21 @@ class Partner extends ExtendPartner
     protected $account;
 
     /**
+     * @var Collection
+     *
+     * @ORM\OneToMany(targetEntity="OroCRM\Bundle\PartnerBundle\Entity\PartnerGitHub",
+     *    mappedBy="partner", cascade={"all"}, orphanRemoval=true
+     * )
+     */
+    protected $gitHubAccounts;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->gitHubAccounts = new ArrayCollection();
+    }
+
+    /**
      * @return integer
      */
     public function getId()
@@ -229,6 +246,41 @@ class Partner extends ExtendPartner
     public function getEmail()
     {
         return $this->getAccount() ? $this->getAccount()->getEmail() : null;
+    }
+
+    /**
+     * @param PartnerGitHub $gitHubAccount
+     * @return Partner
+     */
+    public function addGitHubAccount(PartnerGitHub $gitHubAccount)
+    {
+        if (!$this->gitHubAccounts->contains($gitHubAccount)) {
+            $gitHubAccount->setPartner($this);
+            $this->gitHubAccounts->add($gitHubAccount);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param PartnerGitHub $gitHubAccount
+     * @return Partner
+     */
+    public function removeGitHubAccount(PartnerGitHub $gitHubAccount)
+    {
+        if ($this->gitHubAccounts->contains($gitHubAccount)) {
+            $this->gitHubAccounts->removeElement($gitHubAccount);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getGitHubAccounts()
+    {
+        return $this->gitHubAccounts;
     }
 
     /**
