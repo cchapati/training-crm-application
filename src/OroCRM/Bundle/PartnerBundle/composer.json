@@ -1,0 +1,20 @@
+{
+    "name": "orocrm/partner-bundle",
+    "type": "symfony-bundle",
+    "description": "Oro CRM Partner Bundle",
+    "keywords": ["CRM"],
+    "license": "MIT",
+    "require": {
+        "knplabs/github-api": "*"
+    },
+    "autoload": {
+        "psr-0": { "": "src/" }
+    },
+    "target-dir": "OroCRM/Bundle/PartnerBundle",
+    "minimum-stability": "dev",
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    }
+}
