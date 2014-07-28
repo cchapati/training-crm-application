@@ -1,5 +1,7 @@
 OroCRM\Bundle\PartnerBundle\Entity\Partner:
     properties:
+        account:
+            - NotBlank: ~
         status:
             - NotBlank: ~
     constraints:
