@@ -31,12 +31,12 @@ services:
     orocrm_partner.form.type.partner_git_hub:
         class: %orocrm_partner.form.type.partner_git_hub.class%
         tags:
-             - { name: form.type, alias: oro_partner_git_hub_account }
+             - { name: form.type, alias: orocrm_partner_git_hub_account }
 
     orocrm_partner.form.type.partner_git_hub_collection:
         class: %orocrm_partner.form.type.partner_git_hub_collection.class%
         tags:
-             - { name: form.type, alias: oro_partner_git_hub_account_collection }
+             - { name: form.type, alias: orocrm_partner_git_hub_account_collection }
 
     orocrm_partner.form.handler.partner:
         class:                                      %orocrm_partner.handler.partner.class%

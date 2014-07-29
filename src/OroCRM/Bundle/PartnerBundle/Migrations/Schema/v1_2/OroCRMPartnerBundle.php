@@ -14,13 +14,13 @@ class OroCRMPartnerBundle implements Migration
      */
     public function up(Schema $schema, QueryBag $queries)
     {
-        self::createPartnerGitHubTable($schema);
+        self::createGitHubAccountTable($schema);
     }
 
-    public static function createPartnerGitHubTable(Schema $schema)
+    public static function createGitHubAccountTable(Schema $schema)
     {
         /** Generate table orocrm_partner_git_hub **/
-        $table = $schema->createTable('orocrm_git_hub_account');
+        $table = $schema->createTable('orocrm_partner_git_hub_account');
         $table->addColumn('id', 'integer', ['autoincrement' => true]);
         $table->addColumn('partner_id', 'integer', ['notnull' => false]);
         $table->addColumn('created_at', 'datetime', ['notnull' => false]);

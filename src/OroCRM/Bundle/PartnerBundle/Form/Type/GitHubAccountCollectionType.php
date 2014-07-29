@@ -32,6 +32,6 @@ class GitHubAccountCollectionType extends AbstractType
      */
     public function getName()
     {
-        return 'oro_partner_git_hub_account_collection';
+        return 'orocrm_partner_git_hub_account_collection';
     }
 }

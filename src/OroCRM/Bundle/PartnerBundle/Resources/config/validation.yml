@@ -7,7 +7,7 @@ OroCRM\Bundle\PartnerBundle\Entity\Partner:
     constraints:
         - OroCRM\Bundle\PartnerBundle\Validator\Constraints\UniquePartnerAccount: ~
 
-OroCRM\Bundle\PartnerBundle\Entity\PartnerGitHub:
+OroCRM\Bundle\PartnerBundle\Entity\GitHubAccount:
     properties:
         username:
             - NotBlank: ~

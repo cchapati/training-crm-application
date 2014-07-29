@@ -10,7 +10,7 @@ use OroCRM\Bundle\PartnerBundle\Model\ExtendGitHubAccount;
 
 /**
  * @ORM\Entity()
- * @ORM\Table(name="orocrm_git_hub_account")
+ * @ORM\Table(name="orocrm_partner_git_hub_account")
  * @ORM\HasLifecycleCallbacks()
  * @Config(
  *  defaultValues={
@@ -176,6 +176,6 @@ class GitHubAccount extends ExtendGitHubAccount
      */
     public function __toString()
     {
-        return $this->getUsername();
+        return $this->getUsername() ? (string)$this->getUsername() : '';
     }
 }

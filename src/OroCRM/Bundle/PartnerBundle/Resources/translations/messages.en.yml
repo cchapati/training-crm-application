@@ -16,8 +16,8 @@ orocrm:
         datagrid.delete:            Delete
 
         githubaccount:
-          entity_plural_label:  Partner GitHub account
-          entity_label:         Partner GitHub accounts
+          entity_plural_label:  Partner GitHub Accounts
+          entity_label:         Partner GitHub Account
           id.label:             Id
           email.label:          Email
           name.label:           Name
