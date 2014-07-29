@@ -24,17 +24,6 @@ class ConfigurationProviderTest extends \PHPUnit_Framework_TestCase
         $this->provider = new ConfigurationProvider($this->configManager);
     }
 
-    public function testGetUser()
-    {
-        $expected = 'TestUsername';
-        $this->configManager->expects($this->once())
-            ->method('get')
-            ->with(ConfigurationProvider::USERNAME_FIELD)
-            ->will($this->returnValue($expected));
-        $actual = $this->provider->getUsername();
-        $this->assertEquals($expected, $actual);
-    }
-
     public function testGetApiToken()
     {
         $expected = 'test_token';
@@ -61,24 +50,74 @@ class ConfigurationProviderTest extends \PHPUnit_Framework_TestCase
 
     public function getRepositoriesDataProvider()
     {
-        $firstRepository = 'firstRepo';
+        $repository = 'firstRepo';
+        $owner = 'firstOwner';
         $secondRepository = 'secondRepo';
-        $thirdRepository = 'thirdRepo';
+        $secondOwner = 'secondOwner';
         return array(
             'repositories correctly explode' => array(
-                'repositories' => "{$firstRepository}\r{$secondRepository}\r\n{$thirdRepository}",
+                'repositories' => "{$owner}/{$repository}\r{$secondOwner}/{$secondRepository}",
                 'expected' => array(
-                    $firstRepository,
-                    $secondRepository,
-                    $thirdRepository
+                    array(
+                        'owner' => $owner,
+                        'name'  => $repository
+                    ),
+                    array(
+                        'owner' => $secondOwner,
+                        'name'  => $secondRepository
+                    ),
                 )
             ),
             'repositories correctly explode if spaces presented' => array(
-                'repositories' => "  {$firstRepository}  \n  {$secondRepository} \r\n{$thirdRepository} ",
+                'repositories' => "  {$owner}/{$repository}  \n  {$secondOwner}/{$secondRepository} ",
                 'expected' => array(
-                    $firstRepository,
-                    $secondRepository,
-                    $thirdRepository
+                    array(
+                        'owner' => $owner,
+                        'name'  => $repository
+                    ),
+                    array(
+                        'owner' => $secondOwner,
+                        'name'  => $secondRepository
+                    ),
+                )
+            ),
+            'repositories correctly explode if git hub url presented' => array(
+                'repositories' => "https://github.com/{$owner}/{$repository}\r\n{$secondOwner}/{$secondRepository} ",
+                'expected' => array(
+                    array(
+                        'owner' => $owner,
+                        'name'  => $repository
+                    ),
+                    array(
+                        'owner' => $secondOwner,
+                        'name'  => $secondRepository
+                    ),
+                )
+            ),
+            'repositories correctly explode if repository incorrect' => array(
+                'repositories' => "https://github.com/{$owner}/\r\n{$secondOwner} ",
+                'expected' => array(
+                    array(
+                        'owner' => $owner,
+                        'name'  => ''
+                    ),
+                    array(
+                        'owner' => $secondOwner,
+                        'name'  => ''
+                    ),
+                )
+            ),
+            'repositories correctly explode if repositories ' => array(
+                'repositories' => "https://github.com/{$owner}/\r\n{$secondOwner} ",
+                'expected' => array(
+                    array(
+                        'owner' => $owner,
+                        'name'  => ''
+                    ),
+                    array(
+                        'owner' => $secondOwner,
+                        'name'  => ''
+                    ),
                 )
             )
         );

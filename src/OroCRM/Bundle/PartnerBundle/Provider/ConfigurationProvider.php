@@ -6,7 +6,6 @@ use Oro\Bundle\ConfigBundle\Config\ConfigManager;
 
 class ConfigurationProvider
 {
-    const USERNAME_FIELD = 'oro_crm_partner.github_username';
     const TOKEN_FIELD = 'oro_crm_partner.github_api_token';
     const REPOSITORIES_FIELD = 'oro_crm_partner.github_repositories';
 
@@ -21,14 +20,6 @@ class ConfigurationProvider
     public function __construct(ConfigManager $configManager)
     {
         $this->configManager = $configManager;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUsername()
-    {
-        return $this->configManager->get(self::USERNAME_FIELD);
     }
 
     /**
@@ -50,9 +41,17 @@ class ConfigurationProvider
             return array();
         }
 
-        $repositoriesArray = preg_split("/\r\n|\n|\r/", $repositories);
-        foreach ($repositoriesArray as &$repository) {
+        $repositoriesArray = array();
+        foreach (preg_split("/\r\n|\n|\r/", $repositories) as $repository) {
             $repository = trim($repository);
+            $repository = preg_replace('/http[s]?:\/\/github.com\//', '', $repository);
+            $repositoryParts = explode('/', $repository, 2);
+
+            $repositoriesArray[] = array(
+                'owner'  => $repositoryParts[0],
+                'name'   => empty($repositoryParts[1]) ? '' : $repositoryParts[1],
+                'origin' => $repository
+            );
         }
 
         return $repositoriesArray;

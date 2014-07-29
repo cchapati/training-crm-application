@@ -13,9 +13,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 use Oro\Component\Log\OutputLogger;
 
-class GitHubAccountSubscribeCommand extends ContainerAwareCommand
+class UpdateGitHubCollaboratorsCommand extends ContainerAwareCommand
 {
-    const COMMAND_NAME = 'orocrm:partner-subscribe';
+    const COMMAND_NAME = 'orocrm:partner:update-github-collaborators';
     const STATUS_SUCCESS = 0;
     const STATUS_FAILED  = 255;
 
@@ -66,10 +66,9 @@ class GitHubAccountSubscribeCommand extends ContainerAwareCommand
         $this->logger = new OutputLogger($output);
 
         $token = $configProvider->getApiToken();
-        $username = $configProvider->getUsername();
 
-        if (empty($token) || empty($username)) {
-            $this->logger->error('Token or username is not set');
+        if (empty($token)) {
+            $this->logger->error('Token is not set', array('exception' => null));
 
             return self::STATUS_FAILED;
         }
@@ -78,9 +77,15 @@ class GitHubAccountSubscribeCommand extends ContainerAwareCommand
         $this->logger->notice('Authentication success');
 
         foreach ($configProvider->getRepositories() as $repository) {
-            $this->logger->notice("Repository {$repository} proceed");
-            $this->addCollaborators($addUsers, $username, $repository);
-            $this->removeCollaborators($removeUsers, $username, $repository);
+            $this->logger->notice("Repository {$repository['origin']} proceed");
+
+            if (empty($repository['owner']) || empty($repository['name'])) {
+                $this->logger->warning("Incorrect repository {$repository['origin']} format. Will be skipped");
+                continue;
+            }
+
+            $this->addCollaborators($addUsers, $repository['owner'], $repository['name']);
+            $this->removeCollaborators($removeUsers, $repository['owner'], $repository['name']);
         }
 
         return self::STATUS_SUCCESS;
@@ -95,10 +100,13 @@ class GitHubAccountSubscribeCommand extends ContainerAwareCommand
     {
         foreach ($usersToAdd as $user) {
             try {
-                $this->getCollaborators($this->getClient())->add($username, $repository, $user);
+                $this->getCollaborators()->add($username, $repository, $user);
                 $this->logger->notice("User {$user} added as collaborator");
             } catch (ExceptionInterface $exception) {
-                $this->logger->error("User {$user} not added. Reason: {$exception->getMessage()}");
+                $this->logger->error(
+                    "User {$user} not added. Reason: {$exception->getMessage()}",
+                    array('exception' => $exception)
+                );
             }
         }
     }
@@ -112,23 +120,25 @@ class GitHubAccountSubscribeCommand extends ContainerAwareCommand
     {
         foreach ($usersToRemove as $user) {
             try {
-                $this->getCollaborators($this->getClient())->remove($username, $repository, $user);
+                $this->getCollaborators()->remove($username, $repository, $user);
                 $this->logger->notice("User {$user} removed from collaborators");
             } catch (ExceptionInterface $exception) {
-                $this->logger->error("User {$user} not removed. Reason: {$exception->getMessage()}");
+                $this->logger->error(
+                    "User {$user} not removed. Reason: {$exception->getMessage()}",
+                    array('exception' => $exception)
+                );
             }
         }
     }
 
     /**
-     * @param $client
-     * @return mixed
+     * @return Collaborators
      */
-    protected function getCollaborators($client)
+    protected function getCollaborators()
     {
 
         if (!$this->collaborators) {
-            $this->collaborators = $client->api('repo')
+            $this->collaborators = $this->getClient()->api('repo')
                 ->collaborators();
         }
 

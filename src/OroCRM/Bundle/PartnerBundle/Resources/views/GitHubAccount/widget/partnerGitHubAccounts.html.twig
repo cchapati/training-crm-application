@@ -1,7 +1,7 @@
 {% import 'OroUIBundle::macros.html.twig' as ui %}
 {% import 'OroEntityConfigBundle::macros.html.twig' as entityConfig %}
 
-{% if partner.gitHubAccounts|length > 0%}
+{% if partner.gitHubAccounts|length > 0 %}
     <div class="list-box widget-content">
         {% for gitHubAccount in partner.gitHubAccounts %}
             <div class="list-item">
