@@ -12,7 +12,4 @@ OroCRM\Bundle\PartnerBundle\Entity\PartnerGitHub:
         username:
             - NotBlank: ~
         email:
-            - NotBlank: ~
             - Email: ~
-        name:
-            - NotBlank: ~

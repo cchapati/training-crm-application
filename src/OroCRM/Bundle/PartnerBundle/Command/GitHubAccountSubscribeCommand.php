@@ -4,8 +4,8 @@ namespace OroCRM\Bundle\PartnerBundle\Command;
 
 use Github\Api\Repository\Collaborators;
 use Github\Client;
-
 use Github\Exception\ExceptionInterface;
+
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -13,7 +13,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 use Oro\Component\Log\OutputLogger;
 
-class PartnerSubscribeCommand extends ContainerAwareCommand
+class GitHubAccountSubscribeCommand extends ContainerAwareCommand
 {
     const COMMAND_NAME = 'orocrm:partner-subscribe';
     const STATUS_SUCCESS = 0;

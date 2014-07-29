@@ -5,7 +5,7 @@ namespace OroCRM\Bundle\PartnerBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class PartnerGitHubCollectionType extends AbstractType
+class GitHubAccountCollectionType extends AbstractType
 {
     /**
      * {@inheritdoc}
@@ -32,6 +32,6 @@ class PartnerGitHubCollectionType extends AbstractType
      */
     public function getName()
     {
-        return 'oro_partner_git_hub_collection';
+        return 'oro_partner_git_hub_account_collection';
     }
 }

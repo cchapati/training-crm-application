@@ -123,7 +123,7 @@ class Partner extends ExtendPartner
     /**
      * @var Collection
      *
-     * @ORM\OneToMany(targetEntity="OroCRM\Bundle\PartnerBundle\Entity\PartnerGitHub",
+     * @ORM\OneToMany(targetEntity="OroCRM\Bundle\PartnerBundle\Entity\GitHubAccount",
      *    mappedBy="partner", cascade={"all"}, orphanRemoval=true
      * )
      */
@@ -249,12 +249,13 @@ class Partner extends ExtendPartner
     }
 
     /**
-     * @param PartnerGitHub $gitHubAccount
+     * Do not add type hint value can be null
+     * @param GitHubAccount $gitHubAccount
      * @return Partner
      */
-    public function addGitHubAccount(PartnerGitHub $gitHubAccount)
+    public function addGitHubAccount($gitHubAccount)
     {
-        if (!$this->gitHubAccounts->contains($gitHubAccount)) {
+        if ($gitHubAccount instanceof GitHubAccount && !$this->gitHubAccounts->contains($gitHubAccount)) {
             $gitHubAccount->setPartner($this);
             $this->gitHubAccounts->add($gitHubAccount);
         }
@@ -263,12 +264,13 @@ class Partner extends ExtendPartner
     }
 
     /**
-     * @param PartnerGitHub $gitHubAccount
+     * Do not add type hint value can be null
+     * @param GitHubAccount $gitHubAccount
      * @return Partner
      */
-    public function removeGitHubAccount(PartnerGitHub $gitHubAccount)
+    public function removeGitHubAccount($gitHubAccount)
     {
-        if ($this->gitHubAccounts->contains($gitHubAccount)) {
+        if ($gitHubAccount instanceof GitHubAccount && $this->gitHubAccounts->contains($gitHubAccount)) {
             $this->gitHubAccounts->removeElement($gitHubAccount);
         }
 
