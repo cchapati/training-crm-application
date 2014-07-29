@@ -38,18 +38,18 @@ class PartnerSubscribeCommand extends ContainerAwareCommand
     {
         $this
             ->setName(self::COMMAND_NAME)
-            ->setDescription('Runs add or remove collaborators operation')
+            ->setDescription('Adds and/or removes collaborators to GihHub repositories for partners.')
             ->addOption(
-                'usernames-to-add',
+                'add-users',
                 null,
                 InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
-                'List of usernames which need to be added as collaborators',
+                'List of GitHub usernames to add to collaborators',
                 array()
             )->addOption(
-                'usernames-to-remove',
+                'remove-users',
                 null,
                 InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
-                'List of usernames which need to be removed from collaborators',
+                'List of GitHub usernames to remove from collaborators',
                 array()
             );
     }
@@ -59,8 +59,8 @@ class PartnerSubscribeCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $usersToAdd = $input->getOption('usernames-to-add');
-        $usersToRemove = $input->getOption('usernames-to-remove');
+        $addUsers = $input->getOption('add-users');
+        $removeUsers = $input->getOption('remove-users');
         $configProvider = $this->getContainer()
             ->get('orocrm_partner.provider.configuration');
         $this->logger = new OutputLogger($output);
@@ -79,8 +79,8 @@ class PartnerSubscribeCommand extends ContainerAwareCommand
 
         foreach ($configProvider->getRepositories() as $repository) {
             $this->logger->notice("Repository {$repository} proceed");
-            $this->addCollaborators($usersToAdd, $username, $repository);
-            $this->removeCollaborators($usersToRemove, $username, $repository);
+            $this->addCollaborators($addUsers, $username, $repository);
+            $this->removeCollaborators($removeUsers, $username, $repository);
         }
 
         return self::STATUS_SUCCESS;
