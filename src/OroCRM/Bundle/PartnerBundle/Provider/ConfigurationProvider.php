@@ -50,7 +50,7 @@ class ConfigurationProvider
             return array();
         }
 
-        $repositoriesArray = explode(',', $repositories);
+        $repositoriesArray = preg_split("/\r\n|\n|\r/", $repositories);
         foreach ($repositoriesArray as &$repository) {
             $repository = trim($repository);
         }

@@ -45,7 +45,19 @@
         }) }}
     {% endset %}
 
+    {% set gitHubAccountsWidget %}
+        {{ oro_widget_render({
+            'widgetType': 'block',
+            'contentClasses': [],
+            'url': path('orocrm_partner_git_hub_accounts_widget', {id: entity.id}),
+            'title': 'orocrm.partner.form.git_hub_accounts.label'|trans
+        }) }}
+    {% endset %}
+
     {% set generalSectionBlock = [{'data' : [partnerInformationWidget]}]%}
+    {% if gitHubAccountsWidget|striptags|trim is not empty %}
+        {% set generalSectionBlock = generalSectionBlock|merge([{'data' : [gitHubAccountsWidget]}])%}
+    {% endif %}
 
     {% set dataBlocks = [
         {

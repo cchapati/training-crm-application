@@ -65,8 +65,8 @@ class ConfigurationProviderTest extends \PHPUnit_Framework_TestCase
         $secondRepository = 'secondRepo';
         $thirdRepository = 'thirdRepo';
         return array(
-            'repositories divided by "," correctly explode' => array(
-                'repositories' => "{$firstRepository},{$secondRepository},{$thirdRepository}",
+            'repositories correctly explode' => array(
+                'repositories' => "{$firstRepository}\r{$secondRepository}\r\n{$thirdRepository}",
                 'expected' => array(
                     $firstRepository,
                     $secondRepository,
@@ -74,7 +74,7 @@ class ConfigurationProviderTest extends \PHPUnit_Framework_TestCase
                 )
             ),
             'repositories correctly explode if spaces presented' => array(
-                'repositories' => "  {$firstRepository}  ,  {$secondRepository} ,{$thirdRepository} ",
+                'repositories' => "  {$firstRepository}  \n  {$secondRepository} \r\n{$thirdRepository} ",
                 'expected' => array(
                     $firstRepository,
                     $secondRepository,

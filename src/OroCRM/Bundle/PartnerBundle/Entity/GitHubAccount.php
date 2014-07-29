@@ -6,10 +6,11 @@ use Doctrine\ORM\Mapping as ORM;
 
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\Config;
 use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
+use OroCRM\Bundle\PartnerBundle\Model\ExtendGitHubAccount;
 
 /**
  * @ORM\Entity()
- * @ORM\Table(name="orocrm_partner_git_hub")
+ * @ORM\Table(name="orocrm_git_hub_account")
  * @ORM\HasLifecycleCallbacks()
  * @Config(
  *  defaultValues={
@@ -19,7 +20,7 @@ use Oro\Bundle\EntityConfigBundle\Metadata\Annotation\ConfigField;
  *  }
  * )
  */
-class PartnerGitHub
+class GitHubAccount extends ExtendGitHubAccount
 {
     /**
      * @var integer
@@ -84,7 +85,7 @@ class PartnerGitHub
 
     /**
      * @param Partner $partner
-     * @return PartnerGitHub
+     * @return GitHubAccount
      */
     public function setPartner(Partner $partner)
     {
@@ -110,7 +111,7 @@ class PartnerGitHub
 
     /**
      * @param string $username
-     * @return PartnerGitHub
+     * @return GitHubAccount
      */
     public function setUsername($username)
     {
@@ -128,7 +129,7 @@ class PartnerGitHub
 
     /**
      * @param string $name
-     * @return PartnerGitHub
+     * @return GitHubAccount
      */
     public function setName($name)
     {
@@ -146,7 +147,7 @@ class PartnerGitHub
 
     /**
      * @param string $email
-     * @return PartnerGitHub
+     * @return GitHubAccount
      */
     public function setEmail($email)
     {
@@ -168,5 +169,13 @@ class PartnerGitHub
     public function prePersist()
     {
         $this->createdAt = $this->createdAt ? $this->createdAt : new \DateTime('now', new \DateTimeZone('UTC'));
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getUsername();
     }
 }

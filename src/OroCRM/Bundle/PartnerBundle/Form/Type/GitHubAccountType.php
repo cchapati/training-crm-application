@@ -6,7 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class PartnerGitHubType extends AbstractType
+class GitHubAccountType extends AbstractType
 {
     /**
      * {@inheritdoc}
@@ -17,15 +17,24 @@ class PartnerGitHubType extends AbstractType
             ->add(
                 'username',
                 'text',
-                array('required' => true)
+                array(
+                    'required' => true,
+                    'label' => 'orocrm.partner.githubaccount.username.label'
+                )
             )->add(
                 'email',
                 'email',
-                array('required' => true)
+                array(
+                    'required' => false,
+                    'label' => 'orocrm.partner.githubaccount.email.label'
+                )
             )->add(
                 'name',
                 'text',
-                array('required' => true)
+                array(
+                    'required' => false,
+                    'label' => 'orocrm.partner.githubaccount.name.label'
+                )
             );
     }
 
@@ -36,7 +45,7 @@ class PartnerGitHubType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'OroCRM\Bundle\PartnerBundle\Entity\PartnerGitHub'
+                'data_class' => 'OroCRM\Bundle\PartnerBundle\Entity\GitHubAccount'
             )
         );
     }
@@ -45,6 +54,6 @@ class PartnerGitHubType extends AbstractType
      */
     public function getName()
     {
-        return 'oro_partner_git_hub';
+        return 'oro_partner_git_hub_account';
     }
 }

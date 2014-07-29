@@ -83,4 +83,33 @@ class PartnerTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals('', $this->partner->__toString());
     }
+
+    public function testAddGitHubAccount()
+    {
+        $this->partner->addGitHubAccount(null);
+        $actual = $this->partner->getGitHubAccounts();
+        $this->assertCount(0, $actual);
+        $account = $this->getMock('OroCRM\Bundle\PartnerBundle\Entity\GitHubAccount');
+        $account->expects($this->once())
+            ->method('setPartner')
+            ->with($this->partner);
+        $this->partner->addGitHubAccount($account);
+        $actual = $this->partner->getGitHubAccounts();
+        $this->assertCount(1, $actual);
+        $this->assertSame($account, $actual->get(0));
+    }
+
+    public function testRemoveGitHubAccount()
+    {
+        $account = $this->getMock('OroCRM\Bundle\PartnerBundle\Entity\GitHubAccount');
+        $account->expects($this->once())
+            ->method('setPartner')
+            ->with($this->partner);
+        $this->partner->addGitHubAccount($account);
+        $this->partner->removeGitHubAccount(null);
+        $actual = $this->partner->getGitHubAccounts();
+        $this->assertCount(1, $actual);
+        $this->partner->removeGitHubAccount($account);
+        $this->assertCount(0, $actual);
+    }
 }

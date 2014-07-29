@@ -2,18 +2,18 @@
 
 namespace OroCRM\Bundle\PartnerBundle\Tests\Unit\Entity;
 
-use OroCRM\Bundle\PartnerBundle\Entity\PartnerGitHub;
+use OroCRM\Bundle\PartnerBundle\Entity\GitHubAccount;
 
-class PartnerGitHubTest extends \PHPUnit_Framework_TestCase
+class GitHubAccountTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var PartnerGitHub
+     * @var GitHubAccount
      */
     protected $target;
 
     public function setUp()
     {
-        $this->target = new PartnerGitHub();
+        $this->target = new GitHubAccount();
     }
 
     /**
@@ -40,6 +40,13 @@ class PartnerGitHubTest extends \PHPUnit_Framework_TestCase
         $this->target->prePersist();
 
         $this->assertSame($expectedCreated, $this->target->getCreatedAt());
+    }
+
+    public function testToString()
+    {
+        $expected = 'username';
+        $this->target->setUsername($expected);
+        $this->assertEquals($expected, (string)$this->target);
     }
 
     /**
