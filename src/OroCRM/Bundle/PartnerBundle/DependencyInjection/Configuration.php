@@ -21,12 +21,11 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('orocrm_partner');
+        $rootNode = $treeBuilder->root('oro_crm_partner');
 
         SettingsBuilder::append(
             $rootNode,
             [
-                'github_username' => ['value' => ''],
                 'github_api_token'  => ['value' => ''],
                 'github_repositories'  => ['value' => '']
             ]

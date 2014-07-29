@@ -39,6 +39,5 @@ orocrm:
             partner_saved_message:  Partner saved
 
         system_configuration:
-            username: Api User
-            api_token: Api Token
+            api_token: API Token
             repositories: Repositories

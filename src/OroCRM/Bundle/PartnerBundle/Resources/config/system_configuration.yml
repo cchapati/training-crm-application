@@ -7,13 +7,6 @@ oro_system_configuration:
         git_hub_connection:
             title: 'Connection'
     fields:
-        oro_crm_partner.github_username:
-            type: text
-            options:
-                label: 'orocrm.partner.system_configuration.username'
-                resettable: false
-                tooltip: 'orocrm.partner.system_configuration.username.tooltip'
-
         oro_crm_partner.github_api_token:
             type: text
             options:
@@ -39,6 +32,5 @@ oro_system_configuration:
                                 children:
                                     git_hub_connection:
                                         children:
-                                            - oro_crm_partner.github_username
                                             - oro_crm_partner.github_api_token
                                             - oro_crm_partner.github_repositories
