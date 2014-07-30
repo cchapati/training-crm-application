@@ -18,16 +18,23 @@ class GitHubCollaboratorManager
     protected $configProvider;
 
     /**
+     * @var GitHubClientFactory
+     */
+    protected $gitHubClientFactory;
+
+    /**
      * @var Client
      */
     protected $client;
 
     /**
      * @param ConfigurationProvider $configurationProvider
+     * @param GitHubClientFactory   $gitHubClientFactory
      */
-    public function __construct(ConfigurationProvider $configurationProvider)
+    public function __construct(ConfigurationProvider $configurationProvider, GitHubClientFactory $gitHubClientFactory)
     {
         $this->configProvider = $configurationProvider;
+        $this->gitHubClientFactory = $gitHubClientFactory;
     }
 
     /**
@@ -36,7 +43,7 @@ class GitHubCollaboratorManager
      */
     public function addCollaborator($username)
     {
-        $this->authenticate();
+        $this->initClient();
         foreach ($this->configProvider->getRepositories() as $repository) {
             if (empty($repository['owner']) || empty($repository['name'])) {
                 continue;
@@ -56,7 +63,7 @@ class GitHubCollaboratorManager
      */
     public function removeCollaborator($username)
     {
-        $this->authenticate();
+        $this->initClient();
         foreach ($this->configProvider->getRepositories() as $repository) {
             if (empty($repository['owner']) || empty($repository['name'])) {
                 continue;
@@ -72,37 +79,27 @@ class GitHubCollaboratorManager
     }
 
     /**
-     * @throws InvalidConfigurationException
-     */
-    protected function authenticate()
-    {
-        $token = $this->configProvider->getApiToken();
-
-        if (empty($token)) {
-            throw new InvalidConfigurationException('Token is not set');
-        }
-
-        $this->getClient()->authenticate($token, null, Client::AUTH_URL_TOKEN);
-    }
-
-    /**
      * @return Collaborators
      */
     protected function getCollaborators()
     {
-        return $this->getClient()->api('repo')
+        return $this->client->api('repo')
             ->collaborators();
     }
 
     /**
-     * @return Client
+     * @throws InvalidConfigurationException
      */
-    protected function getClient()
+    protected function initClient()
     {
         if (!$this->client) {
-            $this->client = new Client();
-        }
+            $this->client = $this->gitHubClientFactory->createClient();
 
-        return $this->client;
+            $token = $this->configProvider->getApiToken();
+            if (empty($token)) {
+                throw new InvalidConfigurationException('Token is not set');
+            }
+            $this->client->authenticate($token, null, Client::AUTH_URL_TOKEN);
+        }
     }
 }

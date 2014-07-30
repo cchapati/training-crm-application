@@ -46,7 +46,6 @@ abstract class AbstractCollaboratorAction extends AbstractAction
              * @var GitHubAccount $account
              */
             $account = $this->contextAccessor->getValue($context, $this->options[self::OPTION_KEY_ACCOUNT]);
-
             if (!$account) {
                 throw new InvalidParameterException('Git hub account not found');
             }
@@ -54,7 +53,7 @@ abstract class AbstractCollaboratorAction extends AbstractAction
             $username = $account->getUsername();
         }
 
-        if (!empty ($this->options[self::OPTION_KEY_USERNAME])) {
+        if (!empty($this->options[self::OPTION_KEY_USERNAME])) {
             $username = $this->contextAccessor->getValue($context, $this->options[self::OPTION_KEY_USERNAME]);
             if (!$username) {
                 throw new InvalidParameterException('Git hub username not found');
@@ -70,7 +69,7 @@ abstract class AbstractCollaboratorAction extends AbstractAction
     public function initialize(array $options)
     {
         if (empty($options[self::OPTION_KEY_ACCOUNT]) && empty($options[self::OPTION_KEY_USERNAME])) {
-            throw new InvalidParameterException('GitHub account parameter or username is required');
+            throw new InvalidParameterException('GitHub account or username is required');
         }
 
         $this->options = $options;

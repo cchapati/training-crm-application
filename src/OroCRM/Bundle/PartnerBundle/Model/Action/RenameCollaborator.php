@@ -54,7 +54,7 @@ class RenameCollaborator extends AbstractCollaboratorAction
     {
         try {
             $this->removeCollaborator->initialize(
-                array(RemoveCollaborator::OPTION_KEY_USERNAME => new PropertyPath('old'))
+                array(self::OPTION_KEY_USERNAME => new PropertyPath('old'))
             );
             $this->removeCollaborator->execute($context);
         } catch (PartnerException $exception) {

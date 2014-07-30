@@ -12,6 +12,7 @@ parameters:
 
     orocrm_partner.provider.configuration.class:                OroCRM\Bundle\PartnerBundle\Provider\ConfigurationProvider
 
+    orocrm_partner.factory.git_hub_client.class:                OroCRM\Bundle\PartnerBundle\Model\GitHubClientFactory
     orocrm_partner.manager.git_hub_collaborator.class:          OroCRM\Bundle\PartnerBundle\Model\GitHubCollaboratorManager
 
     orocrm_partner.action.add_collaborator.class:               OroCRM\Bundle\PartnerBundle\Model\Action\AddCollaborator
@@ -93,10 +94,14 @@ services:
         arguments:
             - @oro_config.global
 
+    orocrm_partner.factory.git_hub_client:
+        class: %orocrm_partner.factory.git_hub_client.class%
+
     orocrm_partner.manager.git_hub_collaborator:
         class: %orocrm_partner.manager.git_hub_collaborator.class%
         arguments:
             - @orocrm_partner.provider.configuration
+            - @orocrm_partner.factory.git_hub_client
 
     orocrm_partner.action.add_collaborator:
         class: %orocrm_partner.action.add_collaborator.class%
