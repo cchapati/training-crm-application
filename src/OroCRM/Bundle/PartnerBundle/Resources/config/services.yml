@@ -12,6 +12,12 @@ parameters:
 
     orocrm_partner.provider.configuration.class:                OroCRM\Bundle\PartnerBundle\Provider\ConfigurationProvider
 
+    orocrm_partner.manager.git_hub_collaborator.class:          OroCRM\Bundle\PartnerBundle\Model\GitHubCollaboratorManager
+
+    orocrm_partner.action.add_collaborator.class:               OroCRM\Bundle\PartnerBundle\Model\Action\AddCollaborator
+    orocrm_partner.action.remove_collaborator.class:            OroCRM\Bundle\PartnerBundle\Model\Action\RemoveCollaborator
+    orocrm_partner.action.rename_collaborator.class:            OroCRM\Bundle\PartnerBundle\Model\Action\RenameCollaborator
+
 services:
     orocrm_partner.form.partner:
         class:                                      Symfony\Component\Form\Form
@@ -86,3 +92,35 @@ services:
         class: %orocrm_partner.provider.configuration.class%
         arguments:
             - @oro_config.global
+
+    orocrm_partner.manager.git_hub_collaborator:
+        class: %orocrm_partner.manager.git_hub_collaborator.class%
+        arguments:
+            - @orocrm_partner.provider.configuration
+
+    orocrm_partner.action.add_collaborator:
+        class: %orocrm_partner.action.add_collaborator.class%
+        arguments:
+            - @oro_workflow.context_accessor
+            - @orocrm_partner.manager.git_hub_collaborator
+        tags:
+            - { name: oro_workflow.action, alias: add_collaborator }
+
+    orocrm_partner.action.remove_collaborator:
+        class: %orocrm_partner.action.remove_collaborator.class%
+        arguments:
+            - @oro_workflow.context_accessor
+            - @orocrm_partner.manager.git_hub_collaborator
+        tags:
+            - { name: oro_workflow.action, alias: remove_collaborator }
+
+    orocrm_partner.action.rename_collaborator:
+        class: %orocrm_partner.action.rename_collaborator.class%
+        arguments:
+            - @oro_workflow.context_accessor
+            - @orocrm_partner.manager.git_hub_collaborator
+            - @orocrm_partner.action.add_collaborator
+            - @orocrm_partner.action.remove_collaborator
+            - @?logger
+        tags:
+            - { name: oro_workflow.action, alias: rename_collaborator }

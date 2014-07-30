@@ -1,0 +1,111 @@
+definitions:
+    partner_update:
+        label:   'Adds and/or removes collaborators to GihHub repositories for partner'
+        enabled: true
+        entity:  OroCRM\Bundle\PartnerBundle\Entity\Partner
+        order:   10
+        actions_configuration:
+            - @tree:
+                conditions:
+                    @and:
+                        - @not_empty: $status
+                        - @equal: [$status.name, active]
+                actions:
+                    - @foreach:
+                        array: $gitHubAccounts
+                        value: $.gitHubAccount
+                        actions:
+                            - @add_collaborator:
+                                account: $.gitHubAccount
+            - @tree:
+                conditions:
+                    @and:
+                        - @not_empty: $status
+                        - @equal: [$status.name, disable]
+                actions:
+                    - @foreach:
+                        array: $gitHubAccounts
+                        value: $.gitHubAccount
+                        actions:
+                            - @remove_collaborator:
+                                account: $.gitHubAccount
+
+    partner_remove:
+        label:   'Removes collaborators from GihHub repositories for partner'
+        enabled: true
+        entity:  OroCRM\Bundle\PartnerBundle\Entity\Partner
+        order:   10
+        actions_configuration:
+            - @foreach:
+                array: $gitHubAccounts
+                value: $.gitHubAccount
+                actions:
+                    - @remove_collaborator:
+                        account: $.gitHubAccount
+
+
+    partner_github_account_create:
+        label:   'Adds collaborator to GihHub repositories'
+        enabled: true
+        entity:  OroCRM\Bundle\PartnerBundle\Entity\GitHubAccount
+        order:   10
+        actions_configuration:
+            - @tree:
+                conditions:
+                    @and:
+                        - @not_empty: $partner
+                        - @not_empty: $partner.status
+                        - @equal: [$partner.status.name, active]
+                actions:
+                    - @add_collaborator:
+                        account: $.data
+
+    partner_github_account_remove:
+        label:   'Remove collaborator from GihHub repositories'
+        enabled: true
+        entity:  OroCRM\Bundle\PartnerBundle\Entity\GitHubAccount
+        order:   10
+        actions_configuration:
+            - @remove_collaborator:
+                account: $.data
+
+    partner_github_account_update:
+        label:   'Remove collaborator from GihHub repositories and add new one'
+        enabled: true
+        entity:  OroCRM\Bundle\PartnerBundle\Entity\GitHubAccount
+        order:   10
+        actions_configuration:
+            - @tree:
+                actions:
+                    - @rename_collaborator:
+                        username: $.new
+
+triggers:
+    partner_update:
+        -
+            event:    update
+            field:    status
+            priority: 5
+            queued:   true
+
+    partner_remove:
+        -
+            event:  delete
+            queued: true
+
+    partner_github_account_create:
+        -
+            event:    create
+            queued:   true
+
+    partner_github_account_update:
+        -
+            event:    update
+            field:    username
+            priority: 5
+            queued:   true
+
+    partner_github_account_remove:
+        -
+            event:  delete
+            queued: true

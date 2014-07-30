@@ -45,12 +45,11 @@ class ConfigurationProvider
         foreach (preg_split("/\r\n|\n|\r/", $repositories) as $repository) {
             $repository = trim($repository);
             $repository = preg_replace('/http[s]?:\/\/github.com\//', '', $repository);
-            $repositoryParts = explode('/', $repository, 2);
+            $repositoryParts = explode('/', $repository);
 
             $repositoriesArray[] = array(
                 'owner'  => $repositoryParts[0],
-                'name'   => empty($repositoryParts[1]) ? '' : $repositoryParts[1],
-                'origin' => $repository
+                'name'   => empty($repositoryParts[1]) ? '' : $repositoryParts[1]
             );
         }
 
