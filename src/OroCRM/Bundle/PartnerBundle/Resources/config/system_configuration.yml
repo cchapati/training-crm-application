@@ -1,11 +1,11 @@
 oro_system_configuration:
     groups:
         oro_crm_partner_settings:
-            title: 'Partner Settings'
+            title: 'orocrm.partner.system_configuration.groups.partner_settings'
         git_hub_integration:
-            title: 'GitHub Integration'
+            title: 'orocrm.partner.system_configuration.groups.git_hub_integration'
         git_hub_connection:
-            title: 'Connection'
+            title: 'orocrm.partner.system_configuration.groups.git_hub_connection'
     fields:
         oro_crm_partner.github_api_token:
             type: text
