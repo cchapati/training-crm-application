@@ -2,9 +2,10 @@
 
 namespace OroCRM\Bundle\PartnerBundle\Model\Action;
 
+use Oro\Bundle\WorkflowBundle\Exception\ActionException;
 use Oro\Bundle\WorkflowBundle\Model\Action\AbstractAction;
 use Oro\Bundle\WorkflowBundle\Model\ContextAccessor;
-use OroCRM\Bundle\PartnerBundle\Exception\InvalidParameterException;
+
 use OroCRM\Bundle\PartnerBundle\Model\GitHubCollaboratorManager;
 
 abstract class AbstractCollaboratorAction extends AbstractAction
@@ -17,9 +18,9 @@ abstract class AbstractCollaboratorAction extends AbstractAction
     protected $gitHubCollaboratorManager;
 
     /**
-     * @var array
+     * @var string
      */
-    protected $options;
+    protected $username;
 
     /**
      * @param ContextAccessor $contextAccessor
@@ -32,15 +33,16 @@ abstract class AbstractCollaboratorAction extends AbstractAction
     }
 
     /**
-     * @param $context
+     * @param mixed $context
      * @return string
-     * @throws InvalidParameterException
+     * @throws ActionException
      */
     protected function getGitHubUsername($context)
     {
-        $username = $this->contextAccessor->getValue($context, $this->options[self::OPTION_KEY_USERNAME]);
+        $username = $this->contextAccessor->getValue($context, $this->username);
+
         if (!$username) {
-            throw new InvalidParameterException('Git hub username not found');
+            throw new ActionException('GitHub username can\'t be empty.');
         }
 
         return $username;
@@ -51,10 +53,21 @@ abstract class AbstractCollaboratorAction extends AbstractAction
      */
     public function initialize(array $options)
     {
-        if (empty($options[self::OPTION_KEY_USERNAME])) {
-            throw new InvalidParameterException('GitHub username is required');
+        if (1 !== count($options)) {
+            throw new ActionException(
+                sprintf(
+                    'Options must have 1 element, but %d given.',
+                    count($options)
+                )
+            );
         }
 
-        $this->options = $options;
+        if (isset($options[self::OPTION_KEY_USERNAME])) {
+            $this->username = $options[self::OPTION_KEY_USERNAME];
+        } elseif (isset($options[0])) {
+            $this->username = $options[0];
+        } else {
+            throw new ActionException(sprintf('Option "%s" is required.', self::OPTION_KEY_USERNAME));
+        }
     }
 }

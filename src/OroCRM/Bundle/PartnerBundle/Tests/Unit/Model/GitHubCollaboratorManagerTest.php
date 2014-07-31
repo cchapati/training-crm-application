@@ -36,9 +36,9 @@ class GitHubCollaboratorManagerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \OroCRM\Bundle\PartnerBundle\Exception\InvalidConfigurationException
-     * @expectedExceptionMessage Token is not set
+     * @expectedExceptionMessage GitHub API token isn't set.
      */
-    public function testAddCollaboratorThrowExceptionIfTokenNotSetted()
+    public function testAddCollaboratorThrowExceptionIfTokenNotSet()
     {
         $this->configuration->expects($this->once())
             ->method('getRepositories')
@@ -96,7 +96,7 @@ class GitHubCollaboratorManagerTest extends \PHPUnit_Framework_TestCase
             ->will($this->throwException($exception));
         $this->setExpectedException(
             'OroCRM\Bundle\PartnerBundle\Exception\InvalidResponseException',
-            "Can't add Collaborator \"James\" to \"AlexSmith/AlexSampleProject\".Reason: {$reason}",
+            'Can\'t add collaborator "James" to GitHub repository "AlexSmith/AlexSampleProject". Reason: ' . $reason,
             0
         );
         $this->target->addCollaborator($username);
@@ -137,7 +137,8 @@ class GitHubCollaboratorManagerTest extends \PHPUnit_Framework_TestCase
             ->will($this->throwException($exception));
         $this->setExpectedException(
             'OroCRM\Bundle\PartnerBundle\Exception\InvalidResponseException',
-            "Can't remove Collaborator \"James\" from \"AlexSmith/AlexSampleProject\".Reason: {$reason}",
+            'Can\'t remove collaborator "James" from GitHub repository "AlexSmith/AlexSampleProject". Reason: '
+            . $reason,
             0
         );
         $this->target->removeCollaborator($username);
@@ -170,10 +171,10 @@ class GitHubCollaboratorManagerTest extends \PHPUnit_Framework_TestCase
         $repositoryApi = $this->getMockBuilder('Github\Api\Repo')
             ->disableOriginalConstructor()
             ->getMock();
-        $repositoryApi->expects($this->any())
+        $repositoryApi->expects($this->atLeastOnce())
             ->method('collaborators')
             ->will($this->returnValue($collaboratorsApi));
-        $client->expects($this->any())
+        $client->expects($this->atLeastOnce())
             ->method('api')
             ->with('repo')
             ->will($this->returnValue($repositoryApi));

@@ -50,7 +50,7 @@ class GitHubCollaboratorManager
             try {
                 $this->getCollaborators()->add($repository['owner'], $repository['name'], $username);
             } catch (ExceptionInterface $e) {
-                $message = "Can't add Collaborator \"{$username}\" to " .
+                $message = "Can't add collaborator \"{$username}\" to GitHub repository " .
                     "\"{$repository['owner']}/{$repository['name']}\".";
                 throw InvalidResponseException::create($message, $e);
             }
@@ -71,7 +71,7 @@ class GitHubCollaboratorManager
             try {
                 $this->getCollaborators()->remove($repository['owner'], $repository['name'], $username);
             } catch (ExceptionInterface $e) {
-                $message = "Can't remove Collaborator \"{$username}\" from " .
+                $message = "Can't remove collaborator \"{$username}\" from GitHub repository " .
                     "\"{$repository['owner']}/{$repository['name']}\".";
                 throw InvalidResponseException::create($message, $e);
             }
@@ -97,7 +97,7 @@ class GitHubCollaboratorManager
 
             $token = $this->configProvider->getApiToken();
             if (empty($token)) {
-                throw new InvalidConfigurationException('Token is not set');
+                throw new InvalidConfigurationException('GitHub API token isn\'t set.');
             }
             $this->client->authenticate($token, null, Client::AUTH_URL_TOKEN);
         }

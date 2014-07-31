@@ -1,9 +1,9 @@
 definitions:
     partner_update:
-        label:   'Update permissions for all GitHub Accounts of Partner'
+        label: 'Update permissions for all GitHub Accounts of Partner'
         enabled: true
         entity:  OroCRM\Bundle\PartnerBundle\Entity\Partner
-        order:   10
+        order: 10
         actions_configuration:
             - @foreach:
                 array: $gitHubAccounts
@@ -12,40 +12,36 @@ definitions:
                     - @orocrm_partner_add_github_collaborator:
                         conditions:
                             @equal: [$status.name, active]
-                        parameters:
-                            username: $.gitHubAccount.username
+                        parameters: [$.gitHubAccount.username]
                     - @orocrm_partner_remove_github_collaborator:
                         conditions:
                             @equal: [$status.name, disable]
-                        parameters:
-                            username: $.gitHubAccount.username
+                        parameters: [$.gitHubAccount.username]
 
     partner_github_account_create:
-        label:   'Add permission for GitHub Account of Partner'
+        label: 'Add permission for GitHub Account of Partner'
         enabled: true
-        entity:  OroCRM\Bundle\PartnerBundle\Entity\GitHubAccount
-        order:   10
+        entity: OroCRM\Bundle\PartnerBundle\Entity\GitHubAccount
+        order: 10
         actions_configuration:
             - @orocrm_partner_add_github_collaborator:
                 conditions:
                     @equal: [$partner.status.name, active]
-                parameters:
-                    username: $.data.username
+                parameters: [$username]
 
     partner_github_account_remove:
-        label:   'Remove permission for GitHub Account of Partner'
+        label: 'Remove permission for GitHub Account of Partner'
         enabled: true
-        entity:  OroCRM\Bundle\PartnerBundle\Entity\GitHubAccount
-        order:   10
+        entity: OroCRM\Bundle\PartnerBundle\Entity\GitHubAccount
+        order: 10
         actions_configuration:
-            - @orocrm_partner_remove_github_collaborator:
-                username: $.data.username
+            - @orocrm_partner_remove_github_collaborator: [$username]
 
     partner_github_account_update:
-        label:   'Update permission for GitHub Account of Partner'
+        label: 'Update permission for GitHub Account of Partner'
         enabled: true
-        entity:  OroCRM\Bundle\PartnerBundle\Entity\GitHubAccount
-        order:   10
+        entity: OroCRM\Bundle\PartnerBundle\Entity\GitHubAccount
+        order: 10
         actions_configuration:
             - @tree:
                 conditions:
@@ -53,30 +49,28 @@ definitions:
                 actions:
                     - @orocrm_partner_remove_github_collaborator:
                         break_on_failure: false
-                        parameters:
-                            username: $.old
-                    - @orocrm_partner_add_github_collaborator:
-                        username: $.new
+                        parameters: [$.old]
+                    - @orocrm_partner_add_github_collaborator: [$.new]
 
 triggers:
     partner_update:
         -
-            event:    update
-            field:    status
-            queued:   true
+            event: update
+            field: status
+            queued: true
 
     partner_github_account_create:
         -
-            event:    create
-            queued:   true
+            event: create
+            queued: true
 
     partner_github_account_update:
         -
-            event:    update
-            field:    username
-            queued:   true
+            event: update
+            field: username
+            queued: true
 
     partner_github_account_remove:
         -
-            event:  delete
+            event: delete
             queued: true
