@@ -1,38 +1,46 @@
 parameters:
     orocrm_partner.partner.entity.class:                        OroCRM\Bundle\PartnerBundle\Entity\Partner
-    orocrm_partner.type.partner.class:                          OroCRM\Bundle\PartnerBundle\Form\Type\PartnerType
+
+    orocrm_partner.form.type.partner.class:                     OroCRM\Bundle\PartnerBundle\Form\Type\PartnerType
+    orocrm_partner.form.type.partner.api.class:                 OroCRM\Bundle\PartnerBundle\Form\Type\PartnerApiType
     orocrm_partner.form.type.partner_git_hub.class:             OroCRM\Bundle\PartnerBundle\Form\Type\GitHubAccountType
     orocrm_partner.form.type.partner_git_hub_collection.class:  OroCRM\Bundle\PartnerBundle\Form\Type\GitHubAccountCollectionType
-    orocrm_partner.handler.partner.class:                       OroCRM\Bundle\PartnerBundle\Form\Handler\PartnerHandler
+    orocrm_partner.form.handler.partner.class:                  OroCRM\Bundle\PartnerBundle\Form\Handler\PartnerHandler
 
     orocrm_partner.partner.manager.api.class:                   Oro\Bundle\SoapBundle\Entity\Manager\ApiEntityManager
-    orocrm_partner.type.partner.api.class:                      OroCRM\Bundle\PartnerBundle\Form\Type\PartnerApiType
 
-    orocrm_partner.form.validator.unique_partner_account.class: OroCRM\Bundle\PartnerBundle\Validator\Constraints\UniquePartnerAccountValidator
+    orocrm_partner.validator.unique_partner_account.class:      OroCRM\Bundle\PartnerBundle\Validator\Constraints\UniquePartnerAccountValidator
 
+    # Config provider
     orocrm_partner.provider.configuration.class:                OroCRM\Bundle\PartnerBundle\Provider\ConfigurationProvider
 
-    orocrm_partner.factory.git_hub_client.class:                OroCRM\Bundle\PartnerBundle\Model\GitHubClientFactory
-    orocrm_partner.manager.git_hub_collaborator.class:          OroCRM\Bundle\PartnerBundle\Model\GitHubCollaboratorManager
+    # GitHub integration
+    orocrm_partner.git_hub.client_factory.class:                OroCRM\Bundle\PartnerBundle\Model\GitHubClientFactory
+    orocrm_partner.git_hub.collaborator_manager.class:          OroCRM\Bundle\PartnerBundle\Model\GitHubCollaboratorManager
 
+    # Process actions
     orocrm_partner.action.add_collaborator.class:               OroCRM\Bundle\PartnerBundle\Model\Action\AddCollaborator
     orocrm_partner.action.remove_collaborator.class:            OroCRM\Bundle\PartnerBundle\Model\Action\RemoveCollaborator
 
 services:
-    orocrm_partner.form.partner:
-        class:                                      Symfony\Component\Form\Form
-        factory_method: createNamed
-        factory_service: form.factory
-        arguments: [orocrm_partner_form, orocrm_partner]
-
+    # Form Types
     orocrm_partner.form.type.partner:
-        class:                                      %orocrm_partner.type.partner.class%
+        class: %orocrm_partner.form.type.partner.class%
         arguments:
             - @router
             - @oro_locale.formatter.name
             - @oro_security.security_facade
         tags:
             - { name: form.type, alias: orocrm_partner }
+
+    orocrm_partner.form.type.partner.api:
+        class: %orocrm_partner.form.type.partner.api.class%
+        arguments:
+            - @router
+            - @oro_locale.formatter.name
+            - @oro_security.security_facade
+        tags:
+            - { name: form.type, alias: orocrm_partner_api }
 
     orocrm_partner.form.type.partner_git_hub:
         class: %orocrm_partner.form.type.partner_git_hub.class%
@@ -44,69 +52,73 @@ services:
         tags:
              - { name: form.type, alias: orocrm_partner_git_hub_account_collection }
 
-    orocrm_partner.form.handler.partner:
-        class:                                      %orocrm_partner.handler.partner.class%
-        scope: request
-        arguments:
-            - @orocrm_partner.form.partner
-            - @request
-            - @doctrine.orm.entity_manager
-
-    orocrm_partner.partner.manager.api:
-        class:                                      %orocrm_partner.partner.manager.api.class%
-        arguments:
-            - %orocrm_partner.partner.entity.class%
-            - @doctrine.orm.entity_manager
-
-    orocrm_partner.form.type.partner.api:
-        class:                                      %orocrm_partner.type.partner.api.class%
-        arguments:
-            - @router
-            - @oro_locale.formatter.name
-            - @oro_security.security_facade
-        tags:
-            - { name: form.type, alias: orocrm_partner_api }
+    # Form Instances
+    orocrm_partner.form.partner:
+        class: Symfony\Component\Form\Form
+        factory_method: createNamed
+        factory_service: form.factory
+        arguments: [orocrm_partner_form, orocrm_partner]
 
     orocrm_partner.form.partner.api:
-        class:                                      Symfony\Component\Form\Form
+        class: Symfony\Component\Form\Form
         factory_method: createNamed
         factory_service: form.factory
         arguments: [partner, orocrm_partner_api]
 
+    # Form Handlers
     orocrm_partner.form.handler.partner.api:
-        class:                                      %orocrm_partner.handler.partner.class%
+        class:  %orocrm_partner.form.handler.partner.class%
         scope: request
         arguments:
             - @orocrm_partner.form.partner.api
             - @request
             - @doctrine.orm.entity_manager
 
-    orocrm_partner.form.validator.unique_partner_account:
-        class: %orocrm_partner.form.validator.unique_partner_account.class%
+    orocrm_partner.form.handler.partner:
+        class: %orocrm_partner.form.handler.partner.class%
+        scope: request
+        arguments:
+            - @orocrm_partner.form.partner
+            - @request
+            - @doctrine.orm.entity_manager
+
+    # Api Manager
+    orocrm_partner.partner.manager.api:
+        class: %orocrm_partner.partner.manager.api.class%
+        arguments:
+            - %orocrm_partner.partner.entity.class%
+            - @doctrine.orm.entity_manager
+
+    # Validator
+    orocrm_partner.validator.unique_partner_account:
+        class: %orocrm_partner.validator.unique_partner_account.class%
         arguments:
             - @doctrine
         tags:
             - { name: validator.constraint_validator, alias: unique_partner_account }
 
+    # Config provider
     orocrm_partner.provider.configuration:
         class: %orocrm_partner.provider.configuration.class%
         arguments:
             - @oro_config.global
 
-    orocrm_partner.factory.git_hub_client:
-        class: %orocrm_partner.factory.git_hub_client.class%
+    # GitHub integration
+    orocrm_partner.git_hub.client_factory:
+        class: %orocrm_partner.git_hub.client_factory.class%
 
-    orocrm_partner.manager.git_hub_collaborator:
-        class: %orocrm_partner.manager.git_hub_collaborator.class%
+    orocrm_partner.git_hub.collaborator_manager:
+        class: %orocrm_partner.git_hub.collaborator_manager.class%
         arguments:
             - @orocrm_partner.provider.configuration
-            - @orocrm_partner.factory.git_hub_client
+            - @orocrm_partner.git_hub.client_factory
 
+    # Process actions
     orocrm_partner.action.add_collaborator:
         class: %orocrm_partner.action.add_collaborator.class%
         arguments:
             - @oro_workflow.context_accessor
-            - @orocrm_partner.manager.git_hub_collaborator
+            - @orocrm_partner.git_hub.collaborator_manager
         tags:
             - { name: oro_workflow.action, alias: orocrm_partner_add_github_collaborator }
 
@@ -114,6 +126,6 @@ services:
         class: %orocrm_partner.action.remove_collaborator.class%
         arguments:
             - @oro_workflow.context_accessor
-            - @orocrm_partner.manager.git_hub_collaborator
+            - @orocrm_partner.git_hub.collaborator_manager
         tags:
             - { name: oro_workflow.action, alias: orocrm_partner_remove_github_collaborator }
