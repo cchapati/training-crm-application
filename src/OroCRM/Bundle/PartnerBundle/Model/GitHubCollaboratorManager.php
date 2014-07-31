@@ -43,7 +43,6 @@ class GitHubCollaboratorManager
      */
     public function addCollaborator($username)
     {
-        $this->initClient();
         foreach ($this->configProvider->getRepositories() as $repository) {
             if (empty($repository['owner']) || empty($repository['name'])) {
                 continue;
@@ -51,7 +50,8 @@ class GitHubCollaboratorManager
             try {
                 $this->getCollaborators()->add($repository['owner'], $repository['name'], $username);
             } catch (ExceptionInterface $e) {
-                $message = "Can't add Collaborator({$username}) to({$repository['owner']}/{$repository['name']}).";
+                $message = "Can't add Collaborator \"{$username}\" to " .
+                    "\"{$repository['owner']}/{$repository['name']}\".";
                 throw InvalidResponseException::create($message, $e);
             }
         }
@@ -63,7 +63,6 @@ class GitHubCollaboratorManager
      */
     public function removeCollaborator($username)
     {
-        $this->initClient();
         foreach ($this->configProvider->getRepositories() as $repository) {
             if (empty($repository['owner']) || empty($repository['name'])) {
                 continue;
@@ -72,7 +71,8 @@ class GitHubCollaboratorManager
             try {
                 $this->getCollaborators()->remove($repository['owner'], $repository['name'], $username);
             } catch (ExceptionInterface $e) {
-                $message = "Can't remove Collaborator({$username}) from({$repository['owner']}/{$repository['name']}).";
+                $message = "Can't remove Collaborator \"{$username}\" from " .
+                    "\"{$repository['owner']}/{$repository['name']}\".";
                 throw InvalidResponseException::create($message, $e);
             }
         }
@@ -83,14 +83,14 @@ class GitHubCollaboratorManager
      */
     protected function getCollaborators()
     {
-        return $this->client->api('repo')
-            ->collaborators();
+        return $this->getClient()->api('repo')->collaborators();
     }
 
     /**
+     * @return Client
      * @throws InvalidConfigurationException
      */
-    protected function initClient()
+    protected function getClient()
     {
         if (!$this->client) {
             $this->client = $this->gitHubClientFactory->createClient();
@@ -101,5 +101,7 @@ class GitHubCollaboratorManager
             }
             $this->client->authenticate($token, null, Client::AUTH_URL_TOKEN);
         }
+
+        return $this->client;
     }
 }

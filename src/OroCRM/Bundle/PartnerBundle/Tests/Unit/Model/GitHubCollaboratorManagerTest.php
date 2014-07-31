@@ -3,6 +3,7 @@
 namespace OroCRM\Bundle\PartnerBundle\Tests\Unit\Model;
 
 use Github\Client;
+
 use OroCRM\Bundle\PartnerBundle\Model\GitHubCollaboratorManager;
 
 class GitHubCollaboratorManagerTest extends \PHPUnit_Framework_TestCase
@@ -39,25 +40,21 @@ class GitHubCollaboratorManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testAddCollaboratorThrowExceptionIfTokenNotSetted()
     {
+        $this->configuration->expects($this->once())
+            ->method('getRepositories')
+            ->will(
+                $this->returnValue(
+                    array(
+                        array('owner' => 'AlexSmith', 'name' => 'AlexSampleProject')
+                    )
+                )
+            );
         $this->target->addCollaborator('test');
     }
 
     public function testClientCreatesOnlyOnceAndAuthenticate()
     {
-        $expectedToken = '9ad4c08c-5433-4b53-91cc-b395cca21cce';
-        $this->configuration->expects($this->once())
-            ->method('getApiToken')
-            ->will($this->returnValue($expectedToken));
-        $this->configuration->expects($this->exactly(4))
-            ->method('getRepositories')
-            ->will($this->returnValue(array()));
-        $client = $this->getMock('Github\Client');
-        $this->clientFactory->expects($this->once())
-            ->method('createClient')
-            ->will($this->returnValue($client));
-        $client->expects($this->once())
-            ->method('authenticate')
-            ->with($expectedToken, null, Client::AUTH_URL_TOKEN);
+        $this->getClient(array(array('owner' => 'AlexSmith', 'name' => 'AlexSampleProject')), 4);
         $this->target->addCollaborator('test');
         $this->target->addCollaborator('test');
         $this->target->removeCollaborator('test');
@@ -71,7 +68,7 @@ class GitHubCollaboratorManagerTest extends \PHPUnit_Framework_TestCase
     {
         $collaboratorsApi = $this->getClient($data['repositories']);
         $expectedRepositories = $expected['repositories'];
-        for ($i=0; $i< count($expectedRepositories); $i++) {
+        for ($i = 0; $i < count($expectedRepositories); $i++) {
             $collaboratorsApi->expects($this->at($i))
                 ->method('add')
                 ->with(
@@ -99,7 +96,7 @@ class GitHubCollaboratorManagerTest extends \PHPUnit_Framework_TestCase
             ->will($this->throwException($exception));
         $this->setExpectedException(
             'OroCRM\Bundle\PartnerBundle\Exception\InvalidResponseException',
-            "Can't add Collaborator(James) to(AlexSmith/AlexSampleProject).Reason: {$reason}",
+            "Can't add Collaborator \"James\" to \"AlexSmith/AlexSampleProject\".Reason: {$reason}",
             0
         );
         $this->target->addCollaborator($username);
@@ -112,7 +109,7 @@ class GitHubCollaboratorManagerTest extends \PHPUnit_Framework_TestCase
     {
         $collaboratorsApi = $this->getClient($data['repositories']);
         $expectedRepositories = $expected['repositories'];
-        for ($i=0; $i< count($expectedRepositories); $i++) {
+        for ($i = 0; $i < count($expectedRepositories); $i++) {
             $collaboratorsApi->expects($this->at($i))
                 ->method('remove')
                 ->with(
@@ -140,7 +137,7 @@ class GitHubCollaboratorManagerTest extends \PHPUnit_Framework_TestCase
             ->will($this->throwException($exception));
         $this->setExpectedException(
             'OroCRM\Bundle\PartnerBundle\Exception\InvalidResponseException',
-            "Can't remove Collaborator(James) from(AlexSmith/AlexSampleProject).Reason: {$reason}",
+            "Can't remove Collaborator \"James\" from \"AlexSmith/AlexSampleProject\".Reason: {$reason}",
             0
         );
         $this->target->removeCollaborator($username);
@@ -148,15 +145,16 @@ class GitHubCollaboratorManagerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param array $repositories
+     * @param int   $callsCount
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
-    protected function getClient(array $repositories)
+    protected function getClient(array $repositories, $callsCount = 1)
     {
         $expectedToken = '9ad4c08c-5433-4b53-91cc-b395cca21cce';
         $this->configuration->expects($this->once())
             ->method('getApiToken')
             ->will($this->returnValue($expectedToken));
-        $this->configuration->expects($this->once())
+        $this->configuration->expects($this->exactly($callsCount))
             ->method('getRepositories')
             ->will($this->returnValue($repositories));
         $client = $this->getMock('Github\Client');

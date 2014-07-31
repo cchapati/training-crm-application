@@ -33,7 +33,7 @@ class RemoveCollaboratorTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \OroCRM\Bundle\PartnerBundle\Exception\InvalidParameterException
-     * @expectedExceptionMessage GitHub account or username is required
+     * @expectedExceptionMessage GitHub username is required
      */
     public function testInitialiseThrowExceptionIfOptionsIncorrect()
     {
@@ -80,52 +80,6 @@ class RemoveCollaboratorTest extends \PHPUnit_Framework_TestCase
             ->with($context, $usernameKey)
             ->will($this->returnValue($username));
 
-        $this->target->initialize($options);
-        $this->target->execute($context);
-    }
-
-    public function testExecuteWithAccount()
-    {
-        $context = array();
-        $accountKey = 'key';
-        $username = 'AlexSmith';
-        $options = array(
-            AbstractCollaboratorAction::OPTION_KEY_ACCOUNT => $accountKey
-        );
-
-        $account  =$this->getMock('OroCRM\Bundle\PartnerBundle\Entity\GitHubAccount');
-        $account->expects($this->once())
-            ->method('getUsername')
-            ->will($this->returnValue($username));
-        $this->contextAccessor->expects($this->any())
-            ->method('getValue')
-            ->with($context, $accountKey)
-            ->will($this->returnValue($account));
-
-        $this->manager->expects($this->once())
-            ->method('removeCollaborator')
-            ->with($username);
-
-        $this->target->initialize($options);
-        $this->target->execute($context);
-    }
-
-    /**
-     * @expectedException \OroCRM\Bundle\PartnerBundle\Exception\InvalidParameterException
-     * @expectedExceptionMessage Git hub account not found
-     */
-    public function testExecuteWithAccountThrowExceptionIfAccountIsNull()
-    {
-        $context = array();
-        $accountKey = 'key';
-        $options = array(
-            AbstractCollaboratorAction::OPTION_KEY_ACCOUNT => $accountKey
-        );
-
-        $this->contextAccessor->expects($this->any())
-            ->method('getValue')
-            ->with($context, $accountKey)
-            ->will($this->returnValue(null));
         $this->target->initialize($options);
         $this->target->execute($context);
     }

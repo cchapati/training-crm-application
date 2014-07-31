@@ -2,8 +2,6 @@
 
 namespace OroCRM\Bundle\PartnerBundle\Model\Action;
 
-
-
 class AddCollaborator extends AbstractCollaboratorAction
 {
     /**

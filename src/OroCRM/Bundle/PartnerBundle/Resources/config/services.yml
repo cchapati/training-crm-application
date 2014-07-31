@@ -17,7 +17,6 @@ parameters:
 
     orocrm_partner.action.add_collaborator.class:               OroCRM\Bundle\PartnerBundle\Model\Action\AddCollaborator
     orocrm_partner.action.remove_collaborator.class:            OroCRM\Bundle\PartnerBundle\Model\Action\RemoveCollaborator
-    orocrm_partner.action.rename_collaborator.class:            OroCRM\Bundle\PartnerBundle\Model\Action\RenameCollaborator
 
 services:
     orocrm_partner.form.partner:
@@ -109,7 +108,7 @@ services:
             - @oro_workflow.context_accessor
             - @orocrm_partner.manager.git_hub_collaborator
         tags:
-            - { name: oro_workflow.action, alias: add_collaborator }
+            - { name: oro_workflow.action, alias: orocrm_partner_add_github_collaborator }
 
     orocrm_partner.action.remove_collaborator:
         class: %orocrm_partner.action.remove_collaborator.class%
@@ -117,15 +116,4 @@ services:
             - @oro_workflow.context_accessor
             - @orocrm_partner.manager.git_hub_collaborator
         tags:
-            - { name: oro_workflow.action, alias: remove_collaborator }
-
-    orocrm_partner.action.rename_collaborator:
-        class: %orocrm_partner.action.rename_collaborator.class%
-        arguments:
-            - @oro_workflow.context_accessor
-            - @orocrm_partner.manager.git_hub_collaborator
-            - @orocrm_partner.action.add_collaborator
-            - @orocrm_partner.action.remove_collaborator
-            - @?logger
-        tags:
-            - { name: oro_workflow.action, alias: rename_collaborator }
+            - { name: oro_workflow.action, alias: orocrm_partner_remove_github_collaborator }
