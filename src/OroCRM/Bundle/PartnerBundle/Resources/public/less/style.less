@@ -1,0 +1,61 @@
+.partner-github-accounts {
+  &>div {
+    position: relative;
+    padding: 10px 0 0;
+    margin: 0 0 10px;
+    border: 1px dashed #ededed;
+  }
+  .add-list-item {
+    margin-left: 183px;
+  }
+  .removeRow {
+    position: absolute;
+    top: 0;
+    right: 10px;
+    text-indent:-999;
+    font-size:0;
+    line-height:0;
+    margin: 0 0 0 15px;
+    &:after {
+      display:inline-block;
+      font:14px/1em 'FontAwesome';
+      color:#ddd;
+      content: "\f00d";
+      text-indent:0;
+    }
+    &:hover:after {
+      color:#888;
+    }
+  }
+}
+.partner-github-accounts-box-wrapper {
+  position: relative;
+  .control-group {
+    padding: 5px 0;
+    label.control-label{
+      width: auto;
+      margin: 0 10px 0 0;
+      color: #000000;
+      &:after {
+        content: ':';
+      }
+    }
+    div.controls{
+      margin: 0;
+    }
+  }
+  .partner-github-accounts-box:hover{
+    background-color: #EDF1FA;
+  }
+  .partner-github-accounts-box {
+    background-color: #F6F6F6;
+    float: left;
+    margin: 3px;
+    padding: 10px 20px;
+    width: calc(50% - 6px);
+    cursor: pointer;
+  }
+  .partner-github-accounts-box-row span:first-of-type{
+    padding-right: 5px;
+  }
+}

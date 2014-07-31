@@ -2,9 +2,9 @@
 {% import 'OroEntityConfigBundle::macros.html.twig' as entityConfig %}
 
 {% if partner.gitHubAccounts|length > 0 %}
-    <div class="list-box widget-content">
+    <div class="row-fluid list-box widget-content partner-github-accounts-box-wrapper">
         {% for gitHubAccount in partner.gitHubAccounts %}
-            <div class="list-item">
+            <div class="partner-github-accounts-box">
                 {{ ui.renderProperty('orocrm.partner.githubaccount.username.label'|trans, gitHubAccount.username) }}
                 {{ ui.renderProperty('orocrm.partner.githubaccount.email.label'|trans, gitHubAccount.email) }}
                 {{ ui.renderProperty('orocrm.partner.githubaccount.name.label'|trans, gitHubAccount.name) }}

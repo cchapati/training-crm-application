@@ -57,18 +57,18 @@ triggers:
         -
             event: update
             field: status
-            queued: true
+            queued: false
 
     partner_github_account_create:
         -
             event: create
-            queued: true
+            queued: false
 
     partner_github_account_update:
         -
             event: update
             field: username
-            queued: true
+            queued: false
 
     partner_github_account_remove:
         -

@@ -191,11 +191,3 @@ datagrid:
                 label:         Delete
                 icon:          trash
                 link:          delete_link
-        mass_actions:
-            delete:
-                type: delete
-                entity_name: %orocrm_partner.partner.github_account.entity.class%
-                data_identifier: id
-                acl_resource: orocrm_partner_delete
-                label: orocrm.partner.datagrid.delete
-                icon: trash
