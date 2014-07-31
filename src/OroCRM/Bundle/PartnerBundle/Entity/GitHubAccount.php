@@ -10,7 +10,10 @@ use OroCRM\Bundle\PartnerBundle\Model\ExtendGitHubAccount;
 
 /**
  * @ORM\Entity()
- * @ORM\Table(name="orocrm_partner_git_hub_account")
+ * @ORM\Table(
+ *      name="orocrm_partner_git_hub_account",
+ *      indexes={@ORM\Index(name="github_account_create_idx", columns={"created_at"})}
+ * )
  * @ORM\HasLifecycleCallbacks()
  * @Config(
  *  defaultValues={

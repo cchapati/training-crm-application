@@ -1,0 +1,8 @@
+{% set partnerId = record.getValue('partnerId') %}
+{% if resource_granted('orocrm_partner_view') and partnerId %}
+    <a href="{{ path('orocrm_partner_view', {id: partnerId}) }}">
+        {{ value }}
+    </a>
+{% else %}
+    {{ value }}
+{% endif %}

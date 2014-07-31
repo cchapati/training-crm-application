@@ -19,6 +19,7 @@ orocrm:
           entity_plural_label:  Partner GitHub Accounts
           entity_label:         Partner GitHub Account
           id.label:             Id
+          created_at.label:     Created At
           email.label:          Email
           name.label:           Name
           username.label:       Username

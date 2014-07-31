@@ -1,5 +1,6 @@
 parameters:
     orocrm_partner.partner.entity.class:                        OroCRM\Bundle\PartnerBundle\Entity\Partner
+    orocrm_partner.partner.github_account.entity.class:         OroCRM\Bundle\PartnerBundle\Entity\GitHubAccount
     orocrm_partner.type.partner.class:                          OroCRM\Bundle\PartnerBundle\Form\Type\PartnerType
     orocrm_partner.form.type.partner_git_hub.class:             OroCRM\Bundle\PartnerBundle\Form\Type\GitHubAccountType
     orocrm_partner.form.type.partner_git_hub_collection.class:  OroCRM\Bundle\PartnerBundle\Form\Type\GitHubAccountCollectionType

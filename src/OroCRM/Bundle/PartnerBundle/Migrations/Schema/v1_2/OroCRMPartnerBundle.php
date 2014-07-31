@@ -29,6 +29,7 @@ class OroCRMPartnerBundle implements Migration
         $table->addColumn('email', 'string', ['notnull' => false, 'length' => 100]);
         $table->setPrimaryKey(['id']);
         $table->addIndex(['partner_id'], 'IDX_4ECD86E59393F8FE', []);
+        $table->addIndex(['created_at'], 'github_account_create_idx', []);
         /** End of generate table orocrm_partner_git_hub **/
 
         /** Generate foreign keys for table orocrm_partner_git_hub **/

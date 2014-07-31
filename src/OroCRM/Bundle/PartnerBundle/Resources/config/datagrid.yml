@@ -114,6 +114,88 @@ datagrid:
                 type: delete
                 entity_name: %orocrm_partner.partner.entity.class%
                 data_identifier: partner.id
-                acl_resource: orocrm_contact_delete
+                acl_resource: orocrm_partner_delete
+                label: orocrm.partner.datagrid.delete
+                icon: trash
+
+    partner-github-accounts-grid:
+        extended_entity_name: %orocrm_partner.partner.github_account.entity.class%
+        source:
+            type: orm
+            acl_resource: orocrm_partner_view
+            query:
+                select:
+                    - gitHubAccount.id as id
+                    - gitHubAccount.username as username
+                    - gitHubAccount.email as email
+                    - gitHubAccount.name as name
+                    - partner.id as partnerId
+                    - account.name as partnerAccountName
+                    - gitHubAccount.createdAt as createdAt
+                from:
+                    - { table: OroCRMPartnerBundle:GitHubAccount, alias: gitHubAccount }
+                join:
+                    inner:
+                        - { join: gitHubAccount.partner, alias: partner }
+                        - { join: partner.account, alias: account }
+        columns:
+            username:
+                label:   orocrm.partner.githubaccount.username.label
+            name:
+                label:   orocrm.partner.githubaccount.name.label
+            email:
+                label:   orocrm.partner.githubaccount.email.label
+            partnerAccountName:
+                type: twig
+                label:   orocrm.partner.githubaccount.partner.label
+                frontend_type: html
+                template: OroCRMPartnerBundle:GitHubAccount:Datagrid/Property/partner.html.twig
+            createdAt:
+                label:   orocrm.partner.githubaccount.created_at.label
+                frontend_type: datetime
+        properties:
+            id: ~
+            delete_link:
+                type:       url
+                route:      orocrm_github_account_request_delete
+                params:     [ id ]
+        sorters:
+            columns:
+                username:           { data_name: username }
+                name:               { data_name: name }
+                email:              { data_name: email }
+                partnerAccountName: { data_name: partnerAccountName }
+                createdAt:          { data_name: createdAt }
+            default: { createdAt: %oro_datagrid.extension.orm_sorter.class%::DIRECTION_DESC }
+        filters:
+            columns:
+                username:
+                    type:      string
+                    data_name: username
+                name:
+                    type:      string
+                    data_name: name
+                email:
+                    type:      string
+                    data_name: email
+                partnerAccountName:
+                    type:      string
+                    data_name: partnerAccountName
+                createdAt:
+                    type:      datetime
+                    data_name: createdAt
+        actions:
+            delete:
+                type:          delete
+                acl_resource:  orocrm_partner_delete
+                label:         Delete
+                icon:          trash
+                link:          delete_link
+        mass_actions:
+            delete:
+                type: delete
+                entity_name: %orocrm_partner.partner.github_account.entity.class%
+                data_identifier: id
+                acl_resource: orocrm_partner_delete
                 label: orocrm.partner.datagrid.delete
                 icon: trash
