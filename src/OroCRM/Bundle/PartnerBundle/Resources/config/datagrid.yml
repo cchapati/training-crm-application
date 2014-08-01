@@ -157,7 +157,7 @@ datagrid:
             id: ~
             delete_link:
                 type:       url
-                route:      orocrm_github_account_request_delete
+                route:      orocrm_partner_github_account_request_delete
                 params:     [ id ]
         sorters:
             columns:

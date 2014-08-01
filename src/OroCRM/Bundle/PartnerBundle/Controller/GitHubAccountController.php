@@ -19,9 +19,8 @@ use OroCRM\Bundle\PartnerBundle\Entity\Partner;
  */
 class GitHubAccountController extends Controller
 {
-
     /**
-     * @Route("/", name="orocrm_github_account_index")
+     * @Route("/", name="orocrm_partner_github_account_index")
      * @AclAncestor("orocrm_partner_view")
      * @Template
      */
@@ -44,7 +43,7 @@ class GitHubAccountController extends Controller
     }
 
     /**
-     * @Route("/delete/{id}", name="orocrm_github_account_request_delete", requirements={"id"="\d+"})
+     * @Route("/delete/{id}", name="orocrm_partner_github_account_request_delete", requirements={"id"="\d+"})
      * @AclAncestor("orocrm_partner_delete")
      */
     public function deleteAction(GitHubAccount $entity)

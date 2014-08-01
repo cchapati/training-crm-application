@@ -5,11 +5,11 @@ oro_menu_config:
             route: 'orocrm_partner_index'
             extras:
                 position: 50
-                routes: ['orocrm_partner_*', 'github_accounts_list']
+                routes: ['orocrm_partner_*']
 
         github_accounts_list:
             label: 'orocrm.partner.githubaccount.entity_plural_label'
-            route: 'orocrm_github_account_index'
+            route: 'orocrm_partner_github_account_index'
             extras:
                 position: 60
 
@@ -24,4 +24,4 @@ oro_menu_config:
 
 oro_titles:
     orocrm_partner_index: ~
-    orocrm_github_account_index: ~
+    orocrm_partner_github_account_index: ~
