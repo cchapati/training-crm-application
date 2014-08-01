@@ -5,8 +5,34 @@
     <div class="row-fluid list-box widget-content partner-github-accounts-box-wrapper">
         {% for gitHubAccount in partner.gitHubAccounts %}
             <div class="partner-github-accounts-box">
-                {{ ui.renderProperty('orocrm.partner.githubaccount.username.label'|trans, gitHubAccount.username) }}
-                {{ ui.renderProperty('orocrm.partner.githubaccount.email.label'|trans, gitHubAccount.email) }}
+                <strong>{{ gitHubAccount.username }}</strong>
+                {% set gitHubAccountEmail %}
+                    {% set email_to = gitHubAccount.email %}
+                    {% if gitHubAccount.name is not empty %}
+                        {% set email_to = gitHubAccount.name~' <'~gitHubAccount.email~'>' %}
+                    {% endif %}
+
+                    <a class="partner-box-link" data-url="{{ path('oro_email_email_create', { 'to': email_to, 'entityClass': oro_class_name(partner, true),
+                    'entityId': partner.id }) }}"
+                       href="javascript:void(0);"
+                    {{ ui.renderWidgetDataAttributes({
+                        'type' : 'dialog',
+                        'multiple' : true,
+                        'reload-grid-name' : 'activity-email-grid',
+                        'options' : {
+                            'alias': 'email-dialog',
+                            'dialogOptions' : {
+                                'title' : 'oro.email.send_email'|trans,
+                                'allowMaximize': true,
+                                'allowMinimize': true,
+                                'dblclick': 'maximize',
+                                'maximizedHeightDecreaseBy': 'minimize-bar',
+                                'width': 1000
+                            }
+                        }
+                    }) }} >{{ gitHubAccount.email }}</a>
+                {% endset %}
+                {{ ui.renderHtmlProperty('orocrm.partner.githubaccount.email.label'|trans, gitHubAccountEmail) }}
                 {{ ui.renderProperty('orocrm.partner.githubaccount.name.label'|trans, gitHubAccount.name) }}
                 {{ entityConfig.renderDynamicFields(gitHubAccount) }}
             </div>
