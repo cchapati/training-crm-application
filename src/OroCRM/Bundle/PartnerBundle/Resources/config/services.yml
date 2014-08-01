@@ -23,6 +23,9 @@ parameters:
     orocrm_partner.action.add_collaborator.class:               OroCRM\Bundle\PartnerBundle\Model\Action\AddCollaborator
     orocrm_partner.action.remove_collaborator.class:            OroCRM\Bundle\PartnerBundle\Model\Action\RemoveCollaborator
 
+    #search handler
+    orocrm_partner.form.autocomplete.account.search_handler.class: OroCRM\Bundle\PartnerBundle\Autocomplete\SearchHandler
+
 services:
     # Form Types
     orocrm_partner.form.type.partner:
@@ -130,3 +133,13 @@ services:
             - @orocrm_partner.git_hub.collaborator_manager
         tags:
             - { name: oro_workflow.action, alias: orocrm_partner_remove_github_collaborator }
+
+
+    #account search handler
+    orocrm_partner.form.autocomplete.account.search_handler:
+        class: %orocrm_partner.form.autocomplete.account.search_handler.class%
+        arguments:
+            - @doctrine.orm.entity_manager
+            - @oro_security.acl_helper
+        tags:
+            - { name: oro_form.autocomplete.search_handler, alias: partners_accounts, acl_resource: orocrm_account_view }
