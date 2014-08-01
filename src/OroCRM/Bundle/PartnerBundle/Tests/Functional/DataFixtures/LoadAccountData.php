@@ -5,7 +5,6 @@ namespace OroCRM\Bundle\PartnerBundle\Tests\Functional\DataFixtures;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 
-use Oro\Bundle\DashboardBundle\Tests\Functional\Controller\DataFixtures\LoadUserData;
 use OroCRM\Bundle\AccountBundle\Entity\Account;
 
 class LoadAccountData extends AbstractFixture
@@ -29,5 +28,29 @@ class LoadAccountData extends AbstractFixture
         $manager->flush();
 
         $this->addReference('orocrm_partner:test_account_2', $account);
+
+        $account = new Account();
+        $account->setName('Third Test Account');
+        $account->setOwner($adminUser);
+        $manager->persist($account);
+        $manager->flush();
+
+        $this->addReference('orocrm_partner:test_account_3', $account);
+
+        $account = new Account();
+        $account->setName('Fourth Account');
+        $account->setOwner($adminUser);
+        $manager->persist($account);
+        $manager->flush();
+
+        $this->addReference('orocrm_partner:test_account_4', $account);
+
+        $account = new Account();
+        $account->setName('Fifth Account');
+        $account->setOwner($adminUser);
+        $manager->persist($account);
+        $manager->flush();
+
+        $this->addReference('orocrm_partner:test_account_5', $account);
     }
 }

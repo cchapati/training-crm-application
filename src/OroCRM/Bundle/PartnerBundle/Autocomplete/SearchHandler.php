@@ -50,23 +50,23 @@ class SearchHandler implements SearchHandlerInterface
 
         $page = (int)$page > 0 ? (int)$page : 1;
         $perPage = (int)$perPage > 0 ? (int)$perPage : 10;
-        $perPage += 1;
         $firstResult = ($page - 1) * $perPage;
+        $perPage += 1;
 
         $queryBuilder->from('OroCRMAccountBundle:Account', 'a')
             ->select('a')
             ->where('p IS NULL')
             ->leftJoin('OroCRMPartnerBundle:Partner', 'p', 'WITH', 'a = p.account')
             ->setFirstResult($firstResult)
-            ->setMaxResults($perPage);
+            ->setMaxResults($perPage)
+            ->orderBy('a.name');
 
         if ($query) {
-            $queryBuilder->addSelect('LOCATE(:query, a.name) as HIDDEN relevant');
+            $queryBuilder->addSelect('LOCATE(:query, a.name) as HIDDEN entry_position');
             $queryBuilder->andWhere('a.name like :search_expression');
-            $queryBuilder->orderBy('relevant');
+            $queryBuilder->orderBy('entry_position');
+            $queryBuilder->addOrderBy('a.name');
             $queryBuilder->setParameters(array('query' => $query, 'search_expression' => "%{$query}%"));
-        } else {
-            $queryBuilder->orderBy('a.name');
         }
 
         $items = $this->aclHelper->apply($queryBuilder)->execute();
