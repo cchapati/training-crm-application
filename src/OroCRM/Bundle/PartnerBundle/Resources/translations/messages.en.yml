@@ -3,6 +3,8 @@ orocrm:
         entity_plural_label:        Partners
         entity_label:               Partner
         partner_condition.label:    Condition
+        id.label:                   Id
+        git_hub_accounts.label:     Partner GitHub Accounts
         account.label:              Partner Account
         contract.label:             Contract File
         owner.label:                Owner
