@@ -2,7 +2,7 @@
 
 namespace OroCRM\Bundle\PartnerBundle\Model;
 
-use Github\Api\Repository\Collaborators;
+use Github\Api\Organization\Teams;
 use Github\Client;
 use Github\Exception\ExceptionInterface;
 
@@ -28,6 +28,11 @@ class GitHubCollaboratorManager
     protected $client;
 
     /**
+     * @var array
+     */
+    protected $teams = array();
+
+    /**
      * @param ConfigurationProvider $configurationProvider
      * @param GitHubClientFactory   $gitHubClientFactory
      */
@@ -43,15 +48,11 @@ class GitHubCollaboratorManager
      */
     public function addCollaborator($username)
     {
-        foreach ($this->configProvider->getRepositories() as $repository) {
-            if (empty($repository['owner']) || empty($repository['name'])) {
-                continue;
-            }
+        foreach ($this->configProvider->getTeams() as $team) {
             try {
-                $this->getCollaborators()->add($repository['owner'], $repository['name'], $username);
+                $this->getTeamsApi()->addMember($this->getTeamId($team), $username);
             } catch (ExceptionInterface $e) {
-                $message = "Can't add collaborator \"{$username}\" to GitHub repository " .
-                    "\"{$repository['owner']}/{$repository['name']}\".";
+                $message = "Can't add user \"{$username}\" to GitHub team \"{$team}\".";
                 throw InvalidResponseException::create($message, $e);
             }
         }
@@ -63,27 +64,15 @@ class GitHubCollaboratorManager
      */
     public function removeCollaborator($username)
     {
-        foreach ($this->configProvider->getRepositories() as $repository) {
-            if (empty($repository['owner']) || empty($repository['name'])) {
-                continue;
-            }
-
+        foreach ($this->configProvider->getTeams() as $team) {
             try {
-                $this->getCollaborators()->remove($repository['owner'], $repository['name'], $username);
+                $id = $this->getTeamId($team);
+                $this->getTeamsApi()->removeMember($id, $username);
             } catch (ExceptionInterface $e) {
-                $message = "Can't remove collaborator \"{$username}\" from GitHub repository " .
-                    "\"{$repository['owner']}/{$repository['name']}\".";
+                $message = "Can't remove user \"{$username}\" from GitHub team \"{$team}\".";
                 throw InvalidResponseException::create($message, $e);
             }
         }
-    }
-
-    /**
-     * @return Collaborators
-     */
-    protected function getCollaborators()
-    {
-        return $this->getClient()->api('repo')->collaborators();
     }
 
     /**
@@ -103,5 +92,40 @@ class GitHubCollaboratorManager
         }
 
         return $this->client;
+    }
+
+    protected function getTeamId($name)
+    {
+        $organization = $this->configProvider->getOrganization();
+        if (!$this->teams) {
+            $teamsApi = $this->getTeamsApi();
+            $teams = $teamsApi->all($organization);
+            if (is_array($teams)) {
+                foreach ($teams as $team) {
+                    $this->teams[$team['name']] = $team['id'];
+                }
+            }
+        }
+
+        if (!isset($this->teams[$name])) {
+            throw new InvalidConfigurationException(
+                "GitHub team \"{$name}\" not exist in organization \"{$organization}\"."
+            );
+        }
+
+        return $this->teams[$name];
+    }
+
+    /**
+     * @return Teams
+     */
+    protected function getTeamsApi()
+    {
+        /**
+         * @var Teams $teamsApi
+         */
+        $teamsApi = $this->getClient()
+            ->api('teams');
+        return $teamsApi;
     }
 }

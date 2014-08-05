@@ -41,7 +41,8 @@ orocrm:
 
         system_configuration:
             api_token: API Token
-            repositories: Repositories
+            teams: Teams
+            organization: Organization
             groups:
                 partner_settings: Partner Settings
                 git_hub_integration: GitHub Integration

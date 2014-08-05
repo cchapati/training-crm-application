@@ -2,6 +2,5 @@ orocrm:
     partner:
         system_configuration:
             api_token.tooltip: "GitHub API Token"
-            repositories.tooltip: |
-                                  List of GitHub repositories. Each repository on new line.
-                                  Example: https://github.com/orocrm/platform or orocrm/platform
+            organization.tooltip: "GitHub Organization."
+            teams.tooltip: "List of GitHub teams. Each teams on new line."

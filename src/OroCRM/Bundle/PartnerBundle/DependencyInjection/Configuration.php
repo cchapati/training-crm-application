@@ -27,7 +27,8 @@ class Configuration implements ConfigurationInterface
             $rootNode,
             [
                 'github_api_token'  => ['value' => ''],
-                'github_repositories'  => ['value' => '']
+                'github_teams'       => ['value' => ''],
+                'github_organization'  => ['value' => '']
             ]
         );
         return $treeBuilder;

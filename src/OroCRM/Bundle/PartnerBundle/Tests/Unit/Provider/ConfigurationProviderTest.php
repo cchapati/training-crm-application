@@ -36,88 +36,43 @@ class ConfigurationProviderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider getRepositoriesDataProvider
+     * @dataProvider getTeamsDataProvider
      */
-    public function testGetRepositories($repositories, $expected)
+    public function testGetTeams($teams, $expected)
     {
         $this->configManager->expects($this->once())
             ->method('get')
-            ->with(ConfigurationProvider::REPOSITORIES_FIELD)
-            ->will($this->returnValue($repositories));
-        $actual = $this->provider->getRepositories();
+            ->with(ConfigurationProvider::TEAMS_FIELD)
+            ->will($this->returnValue($teams));
+        $actual = $this->provider->getTeams();
         $this->assertEquals($expected, $actual);
     }
 
-    public function getRepositoriesDataProvider()
+    public function getTeamsDataProvider()
     {
-        $repository = 'firstRepo';
-        $owner = 'firstOwner';
-        $secondRepository = 'secondRepo';
-        $secondOwner = 'secondOwner';
+        $team = 'testTeam';
+        $developersTeam = 'developersTeam';
         return array(
-            'repositories correctly explode' => array(
-                'repositories' => "{$owner}/{$repository}\r{$secondOwner}/{$secondRepository}",
+            'teams correctly explode' => array(
+                'teams' => "{$team}\r{$developersTeam}",
                 'expected' => array(
-                    array(
-                        'owner' => $owner,
-                        'name'  => $repository
-                    ),
-                    array(
-                        'owner' => $secondOwner,
-                        'name'  => $secondRepository
-                    ),
+                    $team,
+                    $developersTeam
                 )
             ),
-            'repositories correctly explode if spaces presented' => array(
-                'repositories' => "  {$owner}/{$repository}  \n  {$secondOwner}/{$secondRepository} ",
+            'teams correctly explode if divided by \n' => array(
+                'teams' => "  {$team}  \n  {$developersTeam} ",
                 'expected' => array(
-                    array(
-                        'owner' => $owner,
-                        'name'  => $repository
-                    ),
-                    array(
-                        'owner' => $secondOwner,
-                        'name'  => $secondRepository
-                    ),
+                    $team,
+                    $developersTeam
                 )
             ),
-            'repositories correctly explode if git hub url presented' => array(
-                'repositories' => "https://github.com/{$owner}/{$repository}\r\n{$secondOwner}/{$secondRepository} ",
+
+            'teams correctly explode if spaces presented' => array(
+                'repositories' => "  {$team}  \r\n  {$developersTeam} ",
                 'expected' => array(
-                    array(
-                        'owner' => $owner,
-                        'name'  => $repository
-                    ),
-                    array(
-                        'owner' => $secondOwner,
-                        'name'  => $secondRepository
-                    ),
-                )
-            ),
-            'repositories correctly explode if repository incorrect' => array(
-                'repositories' => "https://github.com/{$owner}/\r\n{$secondOwner} ",
-                'expected' => array(
-                    array(
-                        'owner' => $owner,
-                        'name'  => ''
-                    ),
-                    array(
-                        'owner' => $secondOwner,
-                        'name'  => ''
-                    ),
-                )
-            ),
-            'repositories correctly explode if repositories ' => array(
-                'repositories' => "https://github.com/{$owner}/\r\n{$secondOwner} ",
-                'expected' => array(
-                    array(
-                        'owner' => $owner,
-                        'name'  => ''
-                    ),
-                    array(
-                        'owner' => $secondOwner,
-                        'name'  => ''
-                    ),
+                    $team,
+                    $developersTeam
                 )
             )
         );

@@ -7,7 +7,8 @@ use Oro\Bundle\ConfigBundle\Config\ConfigManager;
 class ConfigurationProvider
 {
     const TOKEN_FIELD = 'oro_crm_partner.github_api_token';
-    const REPOSITORIES_FIELD = 'oro_crm_partner.github_repositories';
+    const ORGANIZATION_FIELD = 'oro_crm_partner.github_organization';
+    const TEAMS_FIELD = 'oro_crm_partner.github_teams';
 
     /**
      * @var ConfigManager
@@ -33,26 +34,28 @@ class ConfigurationProvider
     /**
      * @return array
      */
-    public function getRepositories()
+    public function getTeams()
     {
-        $repositories = $this->configManager->get(self::REPOSITORIES_FIELD);
+        $teams = $this->configManager->get(self::TEAMS_FIELD);
 
-        if (empty($repositories)) {
+        if (empty($teams)) {
             return array();
         }
 
-        $repositoriesArray = array();
-        foreach (preg_split("/\r\n|\n|\r/", $repositories) as $repository) {
-            $repository = trim($repository);
-            $repository = preg_replace('/http[s]?:\/\/github.com\//', '', $repository);
-            $repositoryParts = explode('/', $repository);
+        $teams = preg_split("/\r\n|\n|\r/", $teams);
 
-            $repositoriesArray[] = array(
-                'owner'  => $repositoryParts[0],
-                'name'   => empty($repositoryParts[1]) ? '' : $repositoryParts[1]
-            );
+        foreach ($teams as &$team) {
+            $team = trim($team);
         }
 
-        return $repositoriesArray;
+        return $teams;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrganization()
+    {
+        return $this->configManager->get(self::ORGANIZATION_FIELD);
     }
 }

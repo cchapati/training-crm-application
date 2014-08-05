@@ -41,11 +41,11 @@ class GitHubCollaboratorManagerTest extends \PHPUnit_Framework_TestCase
     public function testAddCollaboratorThrowExceptionIfTokenNotSet()
     {
         $this->configuration->expects($this->once())
-            ->method('getRepositories')
+            ->method('getTeams')
             ->will(
                 $this->returnValue(
                     array(
-                        array('owner' => 'AlexSmith', 'name' => 'AlexSampleProject')
+                        array('team')
                     )
                 )
             );
@@ -54,7 +54,7 @@ class GitHubCollaboratorManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testClientCreatesOnlyOnceAndAuthenticate()
     {
-        $this->getClient(array(array('owner' => 'AlexSmith', 'name' => 'AlexSampleProject')), 4);
+        $this->getClient(array(array('name' => 'testTeam', 'id' => 1)), 4);
         $this->target->addCollaborator('test');
         $this->target->addCollaborator('test');
         $this->target->removeCollaborator('test');
@@ -66,14 +66,13 @@ class GitHubCollaboratorManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testAddCollaborator(array $data, array $expected)
     {
-        $collaboratorsApi = $this->getClient($data['repositories']);
-        $expectedRepositories = $expected['repositories'];
-        for ($i = 0; $i < count($expectedRepositories); $i++) {
-            $collaboratorsApi->expects($this->at($i))
-                ->method('add')
+        $expectedTeams = $expected['teams'];
+        $teamsAPI = $this->getClient($data['teams']);
+        for ($i = 0; $i < count($expectedTeams); $i++) {
+            $teamsAPI->expects($this->at($i+1))
+                ->method('addMember')
                 ->with(
-                    $expectedRepositories[$i]['owner'],
-                    $expectedRepositories[$i]['name'],
+                    $expectedTeams[$i]['id'],
                     $expected['username']
                 );
         }
@@ -83,20 +82,19 @@ class GitHubCollaboratorManagerTest extends \PHPUnit_Framework_TestCase
     public function testAddCollaboratorThrowAnExceptionIfRequestToApiFailed()
     {
         $username = 'James';
-        $owner = 'AlexSmith';
-        $name = 'AlexSampleProject';
+        $team = array('name' => 'testTeam', 'id' => 1);
         $reason = 'Not Found';
-        $collaboratorsApi = $this->getClient(array(array('owner' => $owner, 'name' => $name)));
+        $teamsAPI = $this->getClient(array($team));
         $exception = $this->getMockBuilder('Github\Exception\RuntimeException')
             ->setConstructorArgs(array($reason))
             ->getMock();
-        $collaboratorsApi->expects($this->once())
-            ->method('add')
-            ->with($owner, $name, $username)
+        $teamsAPI->expects($this->once())
+            ->method('addMember')
+            ->with($team['id'], $username)
             ->will($this->throwException($exception));
         $this->setExpectedException(
             'OroCRM\Bundle\PartnerBundle\Exception\InvalidResponseException',
-            'Can\'t add collaborator "James" to GitHub repository "AlexSmith/AlexSampleProject". Reason: ' . $reason,
+            'Can\'t add user "James" to GitHub team "testTeam". Reason: ' . $reason,
             0
         );
         $this->target->addCollaborator($username);
@@ -107,14 +105,13 @@ class GitHubCollaboratorManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testRemoveCollaborator(array $data, array $expected)
     {
-        $collaboratorsApi = $this->getClient($data['repositories']);
-        $expectedRepositories = $expected['repositories'];
-        for ($i = 0; $i < count($expectedRepositories); $i++) {
-            $collaboratorsApi->expects($this->at($i))
-                ->method('remove')
+        $teamsAPI = $this->getClient($data['teams']);
+        $expectedTeams = $expected['teams'];
+        for ($i = 0; $i < count($expectedTeams); $i++) {
+            $teamsAPI->expects($this->at($i+1))
+                ->method('removeMember')
                 ->with(
-                    $expectedRepositories[$i]['owner'],
-                    $expectedRepositories[$i]['name'],
+                    $expectedTeams[$i]['id'],
                     $expected['username']
                 );
         }
@@ -124,20 +121,19 @@ class GitHubCollaboratorManagerTest extends \PHPUnit_Framework_TestCase
     public function testRemoveCollaboratorThrowAnExceptionIfRequestToApiFailed()
     {
         $username = 'James';
-        $owner = 'AlexSmith';
-        $name = 'AlexSampleProject';
+        $team = array('name' => 'testTeam', 'id' => 1);
         $reason = 'Not Found';
-        $collaboratorsApi = $this->getClient(array(array('owner' => $owner, 'name' => $name)));
+        $collaboratorsApi = $this->getClient(array($team));
         $exception = $this->getMockBuilder('Github\Exception\RuntimeException')
             ->setConstructorArgs(array($reason))
             ->getMock();
         $collaboratorsApi->expects($this->once())
-            ->method('remove')
-            ->with($owner, $name, $username)
+            ->method('removeMember')
+            ->with($team['id'], $username)
             ->will($this->throwException($exception));
         $this->setExpectedException(
             'OroCRM\Bundle\PartnerBundle\Exception\InvalidResponseException',
-            'Can\'t remove collaborator "James" from GitHub repository "AlexSmith/AlexSampleProject". Reason: '
+            'Can\'t remove user "James" from GitHub team "testTeam". Reason: '
             . $reason,
             0
         );
@@ -145,19 +141,32 @@ class GitHubCollaboratorManagerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param array $repositories
-     * @param int   $callsCount
+     * @param array  $teams
+     * @param int    $callsCount
      * @return \PHPUnit_Framework_MockObject_MockObject
      */
-    protected function getClient(array $repositories, $callsCount = 1)
+    protected function getClient(array $teams, $callsCount = 1)
     {
+        $organization = 'testOrganization';
         $expectedToken = '9ad4c08c-5433-4b53-91cc-b395cca21cce';
         $this->configuration->expects($this->once())
             ->method('getApiToken')
             ->will($this->returnValue($expectedToken));
+        $this->configuration->expects($this->any())
+            ->method('getOrganization')
+            ->will($this->returnValue($organization));
         $this->configuration->expects($this->exactly($callsCount))
-            ->method('getRepositories')
-            ->will($this->returnValue($repositories));
+            ->method('getTeams')
+            ->will(
+                $this->returnValue(
+                    array_map(
+                        function ($team) {
+                            return $team['name'];
+                        },
+                        $teams
+                    )
+                )
+            );
         $client = $this->getMock('Github\Client');
         $this->clientFactory->expects($this->once())
             ->method('createClient')
@@ -165,54 +174,34 @@ class GitHubCollaboratorManagerTest extends \PHPUnit_Framework_TestCase
         $client->expects($this->once())
             ->method('authenticate')
             ->with($expectedToken, null, Client::AUTH_URL_TOKEN);
-        $collaboratorsApi = $this->getMockBuilder('\Github\Api\Repository\Collaborators')
+        $teamsAPI = $this->getMockBuilder('Github\Api\Organization\Teams')
             ->disableOriginalConstructor()
             ->getMock();
-        $repositoryApi = $this->getMockBuilder('Github\Api\Repo')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $repositoryApi->expects($this->atLeastOnce())
-            ->method('collaborators')
-            ->will($this->returnValue($collaboratorsApi));
+        $teamsAPI->expects($this->once())
+            ->method('all')
+            ->with($organization)
+            ->will($this->returnValue($teams));
         $client->expects($this->atLeastOnce())
             ->method('api')
-            ->with('repo')
-            ->will($this->returnValue($repositoryApi));
-        return $collaboratorsApi;
+            ->with('teams')
+            ->will($this->returnValue($teamsAPI));
+        return $teamsAPI;
     }
 
     public function addRemoveDataProvider()
     {
         return array(
-            'add/remove Collaborator from repository collaborators' => array(
+            'add/remove Member from team members' => array(
                 'data' => array(
                     'username'     => $username = 'Alex',
-                    'repositories' => $repositories = array(
-                        array('owner' => 'AlexSmith', 'name' => 'AlexSampleProject'),
-                        array('owner' => 'AllenSmith', 'name' => 'AllenSampleProject'),
+                    'teams' => $repositories = array(
+                        array('name' => 'TestTeam', 'id' => 42),
+                        array('name' => 'DevelopersTeam', 'id' => 21),
                     )
                 ),
                 'expected' => array(
                     'username'     => $username,
-                    'repositories' => $repositories
-                )
-            ),
-            'add/remove Collaborator ignored incorrect repositories' => array(
-                'data' => array(
-                    'username'     => $username = 'Alex',
-                    'repositories' => $repositories = array(
-                            array('owner' => 'AlexSmith', 'name' => ''),
-                            array('owner' => '', 'name' => ''),
-                            array('owner' => 'AlexSmith', 'name' => 'AlexSampleProject'),
-                            array('owner' => 'AllenSmith', 'name' => 'AllenSampleProject'),
-                        )
-                ),
-                'expected' => array(
-                    'username'     => $username,
-                    'repositories' => array(
-                        array('owner' => 'AlexSmith', 'name' => 'AlexSampleProject'),
-                        array('owner' => 'AllenSmith', 'name' => 'AllenSampleProject'),
-                    )
+                    'teams' => $repositories
                 )
             )
         );
