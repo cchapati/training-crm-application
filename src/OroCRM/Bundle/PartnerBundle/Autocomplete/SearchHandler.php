@@ -46,12 +46,13 @@ class SearchHandler implements SearchHandlerInterface
     public function search($query, $page, $perPage, $searchById = false)
     {
         $query = trim($query);
-        $queryBuilder = $this->manager->createQueryBuilder();
 
         $page = (int)$page > 0 ? (int)$page : 1;
         $perPage = (int)$perPage > 0 ? (int)$perPage : 10;
         $firstResult = ($page - 1) * $perPage;
         $perPage += 1;
+
+        $queryBuilder = $this->manager->createQueryBuilder();
 
         $queryBuilder->from('OroCRMAccountBundle:Account', 'a')
             ->select('a')
@@ -62,14 +63,21 @@ class SearchHandler implements SearchHandlerInterface
             ->orderBy('a.name');
 
         if ($query) {
-            $queryBuilder->addSelect('LOCATE(:query, a.name) as HIDDEN entry_position');
-            $queryBuilder->andWhere('a.name like :search_expression');
-            $queryBuilder->orderBy('entry_position');
-            $queryBuilder->addOrderBy('a.name');
-            $queryBuilder->setParameters(array('query' => $query, 'search_expression' => "%{$query}%"));
+            if ($searchById) {
+                $queryBuilder->andWhere('a.id = :id');
+                $queryBuilder->setParameters(array('id' => $query));
+            } else {
+                $queryBuilder->addSelect('LOCATE(:query, a.name) as HIDDEN entry_position');
+                $queryBuilder->andWhere('a.name like :search_expression');
+                $queryBuilder->orderBy('entry_position');
+                $queryBuilder->addOrderBy('a.name');
+                $queryBuilder->setParameters(array('query' => $query, 'search_expression' => "%{$query}%"));
+            }
+
         }
 
         $items = $this->aclHelper->apply($queryBuilder)->execute();
+
         $hasMore = count($items) == $perPage;
         if ($hasMore) {
             $items = array_slice($items, 0, $perPage - 1);
