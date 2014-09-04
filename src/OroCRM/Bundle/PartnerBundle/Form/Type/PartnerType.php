@@ -19,7 +19,8 @@ class PartnerType extends AbstractType
                 [
                     'required' => true,
                     'label' => 'orocrm.partner.account.label',
-                    'autocomplete_alias' => 'partners_accounts'
+                    'autocomplete_alias' => 'partners_accounts',
+                    'grid_name' => 'partner-accounts-select-grid',
                 ]
             )
             ->add(

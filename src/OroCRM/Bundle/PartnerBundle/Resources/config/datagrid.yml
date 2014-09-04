@@ -191,3 +191,11 @@ datagrid:
                 label:         Delete
                 icon:          trash
                 link:          delete_link
+
+    partner-accounts-select-grid:
+        extends: accounts-select-grid
+        source:
+            query:
+                select:
+                    - (SELECT count(p.id) FROM OroCRM\Bundle\PartnerBundle\Entity\Partner p WHERE p.account = a.id) as partners
+                having: partners = 0

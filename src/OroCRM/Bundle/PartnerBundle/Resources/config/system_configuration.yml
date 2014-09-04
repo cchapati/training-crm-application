@@ -9,6 +9,7 @@ oro_system_configuration:
     fields:
         oro_crm_partner.github_api_token:
             type: text
+            data_type: string
             options:
                 label: 'orocrm.partner.system_configuration.api_token'
                 resettable: false
@@ -16,6 +17,7 @@ oro_system_configuration:
 
         oro_crm_partner.github_organization:
             type: text
+            data_type: string
             options:
                 label: 'orocrm.partner.system_configuration.organization'
                 resettable: false
@@ -23,6 +25,7 @@ oro_system_configuration:
 
         oro_crm_partner.github_teams:
             type: textarea
+            data_type: string
             options:
                 label: 'orocrm.partner.system_configuration.teams'
                 resettable: false
